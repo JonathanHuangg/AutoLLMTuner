@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "quant-evo"
 version = "0.1.0"
-description = "Evolutionary mixed-precision bit allocation for LLM quantization (NSGA-II)"
+description = "Evolutionary mixed-precision bit allocation for LLM quantization"
 requires-python = ">=3.10"
 dependencies = [
   "PyYAML>=6.0.1",

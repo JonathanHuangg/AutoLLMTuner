@@ -1,14 +1,19 @@
 # GPT helped write this cuz I'm not sure how this stuff works
+# when you have hudnreds of layers, some layers share bitwidth
+# need to map tuples to the layer assignments
 
-units:
+# TODO: 
+units: # each name is quantizible layer
   - name: layers.0.attn.q_proj
   - name: layers.0.attn.k_proj
   - name: layers.0.attn.v_proj
   - name: layers.0.mlp.up_proj
   # ...
+
+# these sets of layesrs shoud always have the same bitwidth
 groups:
   - ["layers.*.attn.q_proj", "layers.*.attn.k_proj", "layers.*.attn.v_proj"]  # optional tied group
 exclude:
   - "embed_tokens"   # keep FP16 if desired
   - "norm.*"         # often excluded
-choices: [2,3,4,6,8,16]
+choices: [2,4,8,16,32]

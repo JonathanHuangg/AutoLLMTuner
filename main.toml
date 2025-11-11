@@ -16,4 +16,5 @@ dependencies = [
   "sqlalchemy>=2.0",
   "scipy>=1.11",
   "tabulate>=0.9",
+  "seaborn>=0.13",
 ]

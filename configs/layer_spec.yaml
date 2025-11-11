@@ -1,0 +1,15 @@
+# GPTed placeholder
+# defines quantizaton groups
+
+units:
+  - name: "embed"
+    layers: ["tok_embeddings"]
+
+  - name: "block_0"
+    layers: ["attn.q_proj", "attn.k_proj", "attn.v_proj", "attn.o_proj", "mlp.fc1", "mlp.fc2"]
+
+  - name: "block_1"
+    layers: ["attn.q_proj", "attn.k_proj", "attn.v_proj", "attn.o_proj", "mlp.fc1", "mlp.fc2"]
+
+  - name: "output"
+    layers: ["lm_head"]

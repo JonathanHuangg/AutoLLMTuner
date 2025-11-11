@@ -44,14 +44,16 @@ class ModelConfig:
 class UnitsConfig:
     spec_file: str
 
+# hardware cost model -> converting bit allocations to latency/memory estimates
 @dataclass
 class HardwareConfig:
     lut_file: str
 
+# specifies where the outputs all go
 @dataclass
 class IOConfig:
     out_dir: str
-    
+
 @dataclass 
 class GlobalConfig:
     run: RunConfig

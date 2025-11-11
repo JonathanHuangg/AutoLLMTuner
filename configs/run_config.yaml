@@ -1,0 +1,58 @@
+run_id: llama3-evoq-pace-001 #tbd by Darin
+
+# TBD BY Darin
+model:
+  name_or_path: /models/llama-7b
+  backend: gptq               # gptq | awq | bitsandbytes | torchao | fakequant
+  precision_options:
+    default: [3,4,6,8]
+    per_layer_overrides:
+      embed_tokens: [6,8]
+      ln_f: [8]
+
+# TBD by darin
+eval:
+  datasets:
+    perplexity: {name: wikitext2, split: validation, max_samples: 2000}
+    tasks:
+      - {name: hella, max_samples: 500}
+      - {name: mmlu_stem, max_samples: 500}
+  latency:
+    prompt_len: 512
+    gen_len: 128
+    batch_size: 1
+    warmup_runs: 2
+    measure_runs: 5
+
+objectives: [acc, latency, vram]       # optimized by NSGA-II
+budgets:
+  max_vram_gb: 14 #tweak this based on budget that we can find
+
+moea:
+  population: 64
+  children_per_gen: 96
+  generations: 30
+  mutation:
+    rate_start: 0.03
+    rate_end: 0.005
+    step_size: 1
+  crossover_prob: 0.8
+  elitism_frac: 0.1
+  selection_pressure: 3
+
+hardware:
+  devices: [0,1]
+  torch_dtype: float16
+  deterministic: true
+
+logging:
+  tracker: pace                  # NEW: tell the orchestrator to use Pace
+  pace:
+    project: quant/llama-frontiers
+    run_name: ${run_id}
+    tags: ["llama-7b","nsga2","gptq"]
+    upload_artifacts: true       # quant configs, plots, frontier tables
+    upload_tables: true          # population & frontier tables each gen
+
+paths:
+  out_dir: runs/${run_id}

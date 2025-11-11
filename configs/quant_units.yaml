@@ -1,0 +1,14 @@
+# GPT helped write this cuz I'm not sure how this stuff works
+
+units:
+  - name: layers.0.attn.q_proj
+  - name: layers.0.attn.k_proj
+  - name: layers.0.attn.v_proj
+  - name: layers.0.mlp.up_proj
+  # ...
+groups:
+  - ["layers.*.attn.q_proj", "layers.*.attn.k_proj", "layers.*.attn.v_proj"]  # optional tied group
+exclude:
+  - "embed_tokens"   # keep FP16 if desired
+  - "norm.*"         # often excluded
+choices: [2,3,4,6,8,16]

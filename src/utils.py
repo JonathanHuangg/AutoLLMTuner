@@ -4,7 +4,7 @@ import random
 from typing import Iterable, Tuple 
 
 # can later call random.choice(BITS_CHOICES) to get a random bit width
-BITS_CHOICES = Tuple[int, ...] = (2, 4, 8, 16, 32)
+BITS_CHOICES = (2, 4, 8, 16, 32)
 
 # used for IDs of individuals
 def sha1_hash(data: bytes):

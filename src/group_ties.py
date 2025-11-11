@@ -9,7 +9,7 @@ from .utils import BITS_CHOICES
 # takes raw per-unit bit assignment and makes them match the YAML file
 # main loop: takes raw per-unit bits, makes them legal + structured
 
-# should mirror the YAML structure
+# should pull from the YAML structure
 @dataclass
 class GroupSpec:
     units: List[str] # explicit layer names: layers.0.attn.q_proj
@@ -20,6 +20,9 @@ class GroupSpec:
 """
 manages the mapping of unit names to indices and applies:
 exclusion mask, tied groups
+
+unit_names: list of all quantizible unit names in order
+self.spec: GroupSpec loaded from YAML
 """
 class GroupTies:
     def __init__(self, unit_names: List[str], spec_path: str):
@@ -37,6 +40,8 @@ class GroupTies:
         self.excluded_mask = [self._match_any(n, self.spec.exclude) for n in unit_names]
 
         self.tie_groups: List[List[int]] = []
+
+        # create all the lists of indices where layers are tied together
         for grp in self.spec.groups:
             indices: List[int] = []
             for pattern in grp:

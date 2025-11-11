@@ -1,0 +1,42 @@
+from __future__ import annotations
+from typing import List, Tuple, Dict, Any
+import random
+from .data_models import Fitness
+from .lut import LatencyLUT
+
+"""
+Computes the Fitness object for a given indivdual
+(validation_loss, memory, latency)
+"""
+
+"""
+Estimate the total memory footprint.
+
+param_counts: number of parameters in each layer
+bits: quantization bandwith for each layer (len(param_counts) should equal len(bits))
+overhead: constant overhead like quantization scales, or just i/o
+
+returns: memory of a single layer in bytes
+"""
+def memory_bytes(param_counts: List[int], bits: Tuple[int, ...], overhead: int= 0) -> int:
+    assert len(param_counts) == len(bits)
+    total = 0
+    for p, b in zip(param_counts, bits):
+        # p * b = number of bits for entire layer
+        # (n + 7) // 8 converts from bits to bytes
+        total += (p * b + 7) // 8
+        total += overhead
+    return int(total) 
+
+def latency_ms_lut(lut: LatencyLUT, op_shapes: List[Tuple[str, int, int, int, int]], bytes_total: int) -> float:
+    return lut.estimate(op_shapes, bytes_total)
+
+# TODO by Sujin
+def val_loss(bits: Tuple[int, ...], base: float=3.0) -> float:
+    return None
+
+def create_fitness(validation_loss: float, mem_bytes: int, latency_ms: float) -> Fitness:
+    return Fitness(val_loss=validation_loss, mem_bytes=mem_bytes, latency=latency_ms)
+
+
+

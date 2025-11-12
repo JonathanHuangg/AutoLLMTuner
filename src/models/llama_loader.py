@@ -17,7 +17,7 @@ class LlamaModelLoader:
         model_cfg = self.run_cfg["model"]
         model_path = model_cfg["name_or_path"]
         dtype = torch.float16 if self.run_cfg["hardware"]["torch_dtype"] == "float16" else torch.float32
-
+        print(dtype)
         self.model = AutoModelForCausalLM.from_pretrained(
             model_path,
             torch_dtype=dtype,

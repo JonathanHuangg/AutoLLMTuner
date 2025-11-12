@@ -23,7 +23,7 @@ class Individual:
 class Fitness:
     val_loss: float # validation loss
     mem_bytes: int
-    latency: float # latency in milliseconds
+    latency_ms: float # latency in milliseconds
 
 @dataclass
 class EvaluatedIndividual:

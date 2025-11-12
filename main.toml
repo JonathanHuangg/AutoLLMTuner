@@ -16,4 +16,8 @@ dependencies = [
   "sqlalchemy>=2.0",
   "scipy>=1.11",
   "tabulate>=0.9",
+  "seaborn>=0.13",
+  "toml>=0.10",
+  "torch >= 2.3.1",
+  "transformers >= 4.43.3",
 ]

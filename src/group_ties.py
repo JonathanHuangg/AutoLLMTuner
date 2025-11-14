@@ -18,8 +18,13 @@ class GroupSpec:
     choices: List[int] # the allowed bitWidths
 
 """
-manages the mapping of unit names to indices and applies:
-exclusion mask, tied groups
+Problem: given something like 32 transformer layers and each layer has 6 weight matrices,
+you are working with 200+ matrices. Each individual vector assigned with the accepted bit ranges creates
+a ton of need to high amount of search. 
+
+Solution: Q,K,V projections should be the same gene for every layer. 
+
+
 
 unit_names: list of all quantizible unit names in order
 self.spec: GroupSpec loaded from YAML
@@ -63,6 +68,7 @@ class GroupTies:
         return any(fnmatch.fnmatch(name, p) for p in patterns)
 
     # applies the group constraints 
+    # for a q,k,v, you ensure they are the same.
     def repair(self, bits: Tuple[int, ...]) -> Tuple[int, ...]:
         choices = self.spec.choices 
         out = list(bits)

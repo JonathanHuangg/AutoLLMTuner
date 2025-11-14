@@ -63,6 +63,23 @@ class GlobalConfig:
     hardware: HardwareConfig
     io: IOConfig
 
+def load_config(path: str) -> GlobalConfig:
+    with open(path, "r") as f:
+        raw: Dict[str, Any] = yaml.safe_load(f)
+    
+    run_config = RunConfig(**raw["run"])
+    eval_config = EvalConfig(**raw["evaluation"])
+    model_config = ModelConfig(**raw["model"])
+    unit_config = UnitsConfig(**raw["units"])
+    hw_config = HardwareConfig(**raw["hardware"])
+    io_config = IOConfig(**raw["io"])
+
+    return GlobalConfig(run=run_config, 
+                        evaluation=eval_config, 
+                        model=model_config, 
+                        units=unit_config, 
+                        hardware=hw_config, 
+                        io=io_config)
 
 
 

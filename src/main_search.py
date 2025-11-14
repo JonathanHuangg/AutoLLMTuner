@@ -8,6 +8,7 @@ from data_models import Individual, EvaluatedIndividual, ParamLayout
 from group_ties import GroupTies
 from lut import LatencyLUT
 from cache import MetricsCache
+from frontier import pareto_archive
 from evaluator import Evaluator
 from logging_utils import setup_logger
 from core_evolutionary import partition_pareto_fronts, get_crowding_distances, mutate, crossover, build_individual, tournament_pick

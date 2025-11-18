@@ -3,7 +3,8 @@ import yaml
 from pathlib import Path
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-class LlamaModelLoader:
+class HFModelLoader:
+    """Generic Hugging Face Model Loader - works with any transformer model"""
     def __init__(self, run_config_path: str, layer_spec_path: str):
         # Load both YAMLs
         self.run_cfg = yaml.safe_load(open(run_config_path))
@@ -13,17 +14,24 @@ class LlamaModelLoader:
         self.layer_metadata = {}
 
     def load_model(self):
-        """Load the base (pre-quantized) LLaMA model"""
+        """Load the base model from Hugging Face or local path"""
         model_cfg = self.run_cfg["model"]
         model_path = model_cfg["name_or_path"]
         dtype = torch.float16 if self.run_cfg["hardware"]["torch_dtype"] == "float16" else torch.float32
-        print(dtype)
+        print(f"Loading model from: {model_path}")
+        print(f"Using dtype: {dtype}")
+        
         self.model = AutoModelForCausalLM.from_pretrained(
             model_path,
             torch_dtype=dtype,
             device_map="auto"
         )
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+        
+        # Set pad token if not already set
+        if self.tokenizer.pad_token is None:
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+        
         return self.model, self.tokenizer
 
     def extract_layer_metadata(self):
@@ -45,3 +53,9 @@ class LlamaModelLoader:
                 "param_count": total_params
             }
         return self.layer_metadata
+
+
+# Keep backwards compatibility
+class LlamaModelLoader(HFModelLoader):
+    """Backwards compatible alias for LlamaModelLoader"""
+    pass

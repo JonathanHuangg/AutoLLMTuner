@@ -8,28 +8,52 @@ Approximates how a long will take given a list of quantized operations
 Does not run the model
 """
 
-class LatencyLUT: 
+class LatencyLUT:
     def __init__(self, path: str):
-        with open(path, 'r') as f:
-            raw = yaml.safe_load(f)
+        self.path = Path(path)
+        self._table = {}  # (op_type, m, n, k, bitw) -> us
 
-        # key = (op_type, m, n, k, bitw), val = float
-        self.lut: Dict[Tuple[str, int, int, int, int], float] = {}
-        for row in raw.get("latency_lut", []):
-            key = tuple(row["key"]) # from hardware.yaml: - key: ["matmul", 4096, 4096, 4096, 4]
-            op, m, n, k, bit_width = key
-            self.lut[(op, int(m), int(n), int(k), int(bit_width))] = float(row["us"]) / 1000.0  # convert us to ms
-        
-        # add overhead costs. I/O operations like loading weights form memory is based on bandwidth
-        # estimate correction with alpha * bytes_total / 1e9
-        overhead = raw.get("overheads", {}) or {}
+        if self.path.exists():
+            with self.path.open("r") as f:
+                data = yaml.safe_load(f)
+            for entry in data.get("latency_lut", []):
+                op_type, m, n, k, bitw = entry["key"]
+                us = float(entry["us"])
+                self._table[(op_type, m, n, k, bitw)] = us
 
-        # bandwidth alpha is just a correction term. 
-        self.bandwidth_alpha = float(overhead.get("bandwidth_alpha"), 0.0)
+            # store any extra overhead fields if needed
+            self._overheads = data.get("overheads", {})
+        else:
+            self._overheads = {}
 
-    def estimate(self, ops: list[tuple[str, int, int, int, int]], bytes_total: int) -> float:
-        time = 0
-        for op in ops:
-            time += self.lut.get(op, 0.0)
-        time += self.bandwidth_alpha * (bytes_total / 1e9)
-        return time
+    def lookup(self, op_type: str, m: int, n: int, k: int, bitw: int) -> float | None:
+        return self._table.get((op_type, m, n, k, bitw), None)
+
+    def record(self, op_type: str, m: int, n: int, k: int, bitw: int, us: float):
+        """
+        Update the LUT with a new measurement.
+        Policy: keep the min of existing and new (to be conservative).
+        """
+        key = (op_type, m, n, k, bitw)
+        old = self._table.get(key)
+        if old is None or us < old:
+            self._table[key] = us
+
+    def dump(self, path: str | None = None):
+        """
+        Write the LUT back to YAML.
+        """
+        out_path = Path(path) if path is not None else self.path
+        entries = []
+        for (op_type, m, n, k, bitw), us in sorted(self._table.items()):
+            entries.append({
+                "key": [op_type, int(m), int(n), int(k), int(bitw)],
+                "us": float(us),
+            })
+        data = {
+            "latency_lut": entries,
+            "overheads": self._overheads,
+        }
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with out_path.open("w") as f:
+            yaml.safe_dump(data, f, sort_keys=False)

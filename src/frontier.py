@@ -3,7 +3,7 @@ from typing import List, Dict, Any
 import json
 import os
 from .data_models import EvaluatedIndividual
-from core_evolutionary import dominates
+from .core_evolutionary import dominates
 
 """
 given list of evaluated individuals, compute the pareto front

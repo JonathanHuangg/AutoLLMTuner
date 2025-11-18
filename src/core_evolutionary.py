@@ -1,8 +1,8 @@
 from __future__ import annotations
-from typing import List, Tuple, Dict, Any
+from typing import List, Tuple
 import random
 from .data_models import Individual, EvaluatedIndividual, Fitness
-from .utils import BITS_CHOICES, config_id_for_bits
+from .utils import BITS_CHOICES, create_individual_id
 
 """
 a dominates B if it is equal or better in all objectives
@@ -25,37 +25,41 @@ if the num_domnated_by == 0, it is the pareto.
 This can be peeled back pareto layer by layer to return the partitions
 """
 def partition_pareto_fronts(evals: List[EvaluatedIndividual]) -> List[List[EvaluatedIndividual]]:
-    dominate_indices = {i: [] for i in range(len(evals))} # hashmap that tracks the ith individual and the ones it dominates
-    num_domminated_by = [0] * len(evals) # how many individuals dominate candidate i
-    fronts = List[List[int]]
+    """Fast non-dominated sorting. Returns fronts of evaluated individuals."""
+    dominate_indices = {i: [] for i in range(len(evals))}
+    num_dominated_by = [0] * len(evals)
+    fronts: List[List[int]] = [[]]
 
-    # o(n^2) search to compare every pair to get dominate list
-    for first_candidate_idx in range(len(evals)):
-        for sec_candidate_idx in range(len(evals)):
-            if dominates(evals[first_candidate_idx].fit, evals[sec_candidate_idx].fit):
-                dominate_indices[first_candidate_idx].append(sec_candidate_idx)
-            elif dominates(evals[sec_candidate_idx].fit, evals[first_candidate_idx].fit):
-                num_domminated_by[first_candidate_idx] += 1
-        
-        # if nothing dominates this idx, it is in the 0th pareto frontier
-        if num_domminated_by[first_candidate_idx] == 0:
-            fronts[0].append(first_candidate_idx)
-    
-    # dominate_indices is filled and we can now peel back the layers
-    final_ret = List[List[EvaluatedIndividual]]
+    for p_idx in range(len(evals)):
+        for q_idx in range(len(evals)):
+            if p_idx == q_idx:
+                continue
+            if dominates(evals[p_idx].fit, evals[q_idx].fit):
+                dominate_indices[p_idx].append(q_idx)
+            elif dominates(evals[q_idx].fit, evals[p_idx].fit):
+                num_dominated_by[p_idx] += 1
+
+        if num_dominated_by[p_idx] == 0:
+            fronts[0].append(p_idx)
+
+    final_fronts: List[List[EvaluatedIndividual]] = []
     i = 0
-    while (i < len(fronts) and fronts[i]):
-        final_ret.append([evals[idx] for idx in fronts[i]]) 
-        next_pareto: List[int] = []
-        for first_candidate_idx in fronts[i]:
-            for sec_candidate_idx in dominate_indices[first_candidate_idx]:
-                num_domminated_by[sec_candidate_idx] -= 1 # subtract the items that dominate in the layer before
-                if num_domminated_by[sec_candidate_idx] == 0:
-                    next_pareto.append(sec_candidate_idx)
-        i += 1
-        fronts.append(next_pareto)
+    while i < len(fronts) and fronts[i]:
+        current_front_indices = fronts[i]
+        final_fronts.append([evals[idx] for idx in current_front_indices])
 
-    return final_ret
+        next_front: List[int] = []
+        for p_idx in current_front_indices:
+            for q_idx in dominate_indices[p_idx]:
+                num_dominated_by[q_idx] -= 1
+                if num_dominated_by[q_idx] == 0:
+                    next_front.append(q_idx)
+
+        if next_front:
+            fronts.append(next_front)
+        i += 1
+
+    return final_fronts
 
 """
 Crowding distance is how far apart an individual is away from other indiviudal. A measurement of uniqueness
@@ -85,7 +89,7 @@ def get_crowding_distances(front: List[EvaluatedIndividual]) -> list[float]:
     for getter in getters:
         values = get_details(getter)
         sorted_indices_in_front = sorted(range(length), key=lambda x: values[x])
-        normalized = normalize(values[i] for i in sorted_indices_in_front)
+        normalized = list(normalize([values[i] for i in sorted_indices_in_front]))
 
         # the best and worst have infinite because they are the extremes
         distances[sorted_indices_in_front[0]] = distances[sorted_indices_in_front[-1]] = float('inf')
@@ -124,7 +128,7 @@ def crossover(a: Tuple[int, ...], b: Tuple[int, ...]) -> Tuple[int, ...]:
     return tuple(a[:cut_idx] + b[cut_idx:])
 
 def build_individual(bits: Tuple[int, ...], seed_tag: str, group_version: str = "v1") -> Individual:
-    return Individual(bits=bits, seed_tag=seed_tag, id=config_id_for_bits(bits, group_version))
+    return Individual(bits=bits, seed_tag=seed_tag, id=create_individual_id(bits, group_version))
 
 def tournament_pick(evals: List[EvaluatedIndividual], fronts: List[List[EvaluatedIndividual]]) -> Individual:
     a, b = random.sample(evals, 2) # pick 2 at random

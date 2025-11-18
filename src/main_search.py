@@ -8,7 +8,7 @@ from data_models import Individual, EvaluatedIndividual, ParamLayout
 from group_ties import GroupTies
 from lut import LatencyLUT
 from cache import MetricsCache
-from frontier import pareto_archive
+from frontier import pareto_archive, save_frontier
 from evaluator import Evaluator
 from logging_utils import setup_logger
 from core_evolutionary import partition_pareto_fronts, get_crowding_distances, mutate, crossover, build_individual, tournament_pick
@@ -29,7 +29,7 @@ def _load_units_and_params(config: GlobalConfig, units_path: str) -> ParamLayout
     
     ties = GroupTies(unit_names, units_path)
     excluded_mask = ties.excluded_mask
-    return ParamLayout(unit=unit_names, param_counts=param_counts, excluded_mask=excluded_mask)
+    return ParamLayout(units=unit_names, param_counts=param_counts, excluded_mask=excluded_mask)
 
 def main():
     ap = argparse.ArgumentParser()
@@ -73,7 +73,7 @@ def main():
     for epoch in range(config.run.generations):
 
         # in the yaml, it is 2 values. Start and end. First half is cheap evolution, second is more expensive. 
-        validation_tokens = config.eval.val_tokens_schedule[0] if epoch < config.run.generations // 2  else config.eval.val_tokens_schedule[1]
+        validation_tokens = config.evaluation.val_tokens_schedule[0] if epoch < config.run.generations // 2 else config.evaluation.val_tokens_schedule[1]
         logger.info(f"Gen {epoch+1}/{config.run.generations} | pop={len(population)} | tokens={validation_tokens}")
         evaluated = evaluator.evaluate_many(population, cache, validation_tokens, threads=config.run.threads)
 
@@ -85,15 +85,46 @@ def main():
         fronts = partition_pareto_fronts(evaluated)
 
         # keep elites
+        keep = max(1, int(config.run.elitism_frac * config.run.population_size))
+        elite: List[Individual] = []
         for front in fronts:
             cd = get_crowding_distances(front)
+            order = sorted(range(len(front)), key=lambda i: (-float(cd[i]), front[i].fit.val_loss))
+            for idx in order:
+                elite.append(front[idx].ind)
+                if (len(elite)) >= keep:
+                    break 
+            if len(elite) >= keep:
+                break
+        
+        # breed next population
+        next_population: List[Individual] = elite[:]
+        while len(next_population) < config.run.population_size:
+            p1, p2 = tournament_pick(evaluated, fronts), tournament_pick(evaluated, fronts)
+            child_bits = p1.bits 
+            if random.random() < config.run.crossover_probability:
+                child_bits = crossover(p1.bits, p2.bits)
+            
+            # do mutation
+            child_bits = mutate(child_bits, config.run.mutation_rate)
+            child_bits = ties.repair(child_bits)
+            next_population.append(Individual(bits=child_bits, seed_tag="xover_mut", id=create_individual_id(child_bits)))
+        
+        population = next_population
+        frontier_path = os.path.join(out_directory, "frontier.json")
+        save_frontier(frontier_path, best_archive)
 
+        best_loss = min(e.fit.val_loss for e in best_archive)
+        logger.info(f"Archive size={len(best_archive)} | best loss={best_loss:.4f}")
+    
+    logger.info(f"Done. Frontier at {os.path.join(out_directory, 'frontier.json')}")
+
+if __name__ == "__main__":
+    main()
 
 
 
     
-
-
 
 
 

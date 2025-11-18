@@ -1,0 +1,127 @@
+# Layer specification for Qwen2.5-7B-Instruct model
+# Used by AutoLLMTuner to identify quantizable units
+
+units:
+  - name: "embed_tokens"
+    layers:
+      - "model.embed_tokens"
+
+  - name: "layer_0"
+    layers:
+      - "model.layers.0"
+
+  - name: "layer_1"
+    layers:
+      - "model.layers.1"
+
+  - name: "layer_2"
+    layers:
+      - "model.layers.2"
+
+  - name: "layer_3"
+    layers:
+      - "model.layers.3"
+
+  - name: "layer_4"
+    layers:
+      - "model.layers.4"
+
+  - name: "layer_5"
+    layers:
+      - "model.layers.5"
+
+  - name: "layer_6"
+    layers:
+      - "model.layers.6"
+
+  - name: "layer_7"
+    layers:
+      - "model.layers.7"
+
+  - name: "layer_8"
+    layers:
+      - "model.layers.8"
+
+  - name: "layer_9"
+    layers:
+      - "model.layers.9"
+
+  - name: "layer_10"
+    layers:
+      - "model.layers.10"
+
+  - name: "layer_11"
+    layers:
+      - "model.layers.11"
+
+  - name: "layer_12"
+    layers:
+      - "model.layers.12"
+
+  - name: "layer_13"
+    layers:
+      - "model.layers.13"
+
+  - name: "layer_14"
+    layers:
+      - "model.layers.14"
+
+  - name: "layer_15"
+    layers:
+      - "model.layers.15"
+
+  - name: "layer_16"
+    layers:
+      - "model.layers.16"
+
+  - name: "layer_17"
+    layers:
+      - "model.layers.17"
+
+  - name: "layer_18"
+    layers:
+      - "model.layers.18"
+
+  - name: "layer_19"
+    layers:
+      - "model.layers.19"
+
+  - name: "layer_20"
+    layers:
+      - "model.layers.20"
+
+  - name: "layer_21"
+    layers:
+      - "model.layers.21"
+
+  - name: "layer_22"
+    layers:
+      - "model.layers.22"
+
+  - name: "layer_23"
+    layers:
+      - "model.layers.23"
+
+  - name: "layer_24"
+    layers:
+      - "model.layers.24"
+
+  - name: "layer_25"
+    layers:
+      - "model.layers.25"
+
+  - name: "layer_26"
+    layers:
+      - "model.layers.26"
+
+  - name: "layer_27"
+    layers:
+      - "model.layers.27"
+
+  - name: "ln_f"
+    layers:
+      - "model.norm"
+
+  - name: "lm_head"
+    layers:
+      - "lm_head"

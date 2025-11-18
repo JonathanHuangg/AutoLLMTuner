@@ -1,16 +1,16 @@
-run_id: llama3-evoq-pace-001 #tbd by Darin
+run_id: qwen2.5-evoq-v001
 
-# TBD BY Darin
+# Qwen 2.5 7B Instruct Configuration
 model:
-  name_or_path: /models/llama-8b
-  backend: gptq               # gptq | awq | bitsandbytes | torchao | fakequant
+  name_or_path: Qwen/Qwen2.5-7B-Instruct  # Or use local path: /path/to/qwen2.5-7b-instruct
+  backend: gptq                            # gptq | awq | bitsandbytes | torchao | fakequant
   precision_options:
     default: [3,4,6,8]
     per_layer_overrides:
       embed_tokens: [6,8]
       ln_f: [8]
 
-# TBD by darin
+# Evaluation settings
 eval:
   datasets:
     perplexity: {name: wikitext2, split: validation, max_samples: 2000}
@@ -24,9 +24,9 @@ eval:
     warmup_runs: 2
     measure_runs: 5
 
-objectives: [acc, latency, vram]       # optimized by NSGA-II
+objectives: [acc, latency, vram]
 budgets:
-  max_vram_gb: 14 #tweak this based on budget that we can find
+  max_vram_gb: 16
 
 moea:
   population: 64
@@ -46,13 +46,13 @@ hardware:
   deterministic: true
 
 logging:
-  tracker: pace                  # NEW: tell the orchestrator to use Pace
+  tracker: pace
   pace:
-    project: quant/llama-frontiers
+    project: quant/qwen-frontiers
     run_name: ${run_id}
-    tags: ["llama-7b","nsga2","gptq"]
-    upload_artifacts: true       # quant configs, plots, frontier tables
-    upload_tables: true          # population & frontier tables each gen
+    tags: ["qwen-2.5-7b","nsga2","gptq"]
+    upload_artifacts: true
+    upload_tables: true
 
 paths:
   out_dir: runs/${run_id}

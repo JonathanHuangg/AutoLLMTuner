@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Tuple, Dict, Any
+from typing import List, Tuple
 import random
 from .data_models import Fitness
 from .lut import LatencyLUT
@@ -18,7 +18,7 @@ overhead: constant overhead like quantization scales, or just i/o
 
 returns: memory of a single layer in bytes
 """
-def memory_bytes(param_counts: List[int], bits: Tuple[int, ...], overhead: int= 0) -> int:
+def memory_bytes(param_counts: List[int], bits: Tuple[int, ...], overhead: int = 0) -> int:
     assert len(param_counts) == len(bits)
     total = 0
     for p, b in zip(param_counts, bits):
@@ -26,17 +26,24 @@ def memory_bytes(param_counts: List[int], bits: Tuple[int, ...], overhead: int= 
         # (n + 7) // 8 converts from bits to bytes
         total += (p * b + 7) // 8
         total += overhead
-    return int(total) 
+    return int(total)
+
 
 def latency_ms_lut(lut: LatencyLUT, op_shapes: List[Tuple[str, int, int, int, int]], bytes_total: int) -> float:
     return lut.estimate(op_shapes, bytes_total)
 
-# TODO by Sujin
-def val_loss(bits: Tuple[int, ...], base: float=3.0) -> float:
-    return None
+
+def mock_val_loss(bits: Tuple[int, ...], base: float = 3.0) -> float:
+    """Placeholder val loss: penalize low-bit allocations and add slight noise for diversity."""
+    avg_bits = sum(bits) / len(bits)
+    penalty = max(0.0, (8 - avg_bits) * 0.05)
+    noise = random.uniform(-0.02, 0.02)
+    return base + penalty + noise
+
 
 def create_fitness(validation_loss: float, mem_bytes: int, latency_ms: float) -> Fitness:
-    return Fitness(val_loss=validation_loss, mem_bytes=mem_bytes, latency=latency_ms)
+    return Fitness(val_loss=validation_loss, mem_bytes=mem_bytes, latency_ms=latency_ms)
 
 
-
+def combine_into_fitness(validation_loss: float, mem_bytes: int, latency_ms: float) -> Fitness:
+    return create_fitness(validation_loss, mem_bytes, latency_ms)

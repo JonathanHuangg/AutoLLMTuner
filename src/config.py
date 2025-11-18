@@ -10,8 +10,8 @@ from enum import Enum
 
 
 class latency_config(Enum):
-    REAL = "real",
-    LOOKUP = "lookup",
+    REAL = "real"
+    LOOKUP = "lookup"
     NONE = "none"
 
 # main configuration for the evolutionary algorithm
@@ -57,7 +57,7 @@ class IOConfig:
 @dataclass 
 class GlobalConfig:
     run: RunConfig
-    eval: EvalConfig
+    evaluation: EvalConfig
     model: ModelConfig
     units: UnitsConfig 
     hardware: HardwareConfig
@@ -80,6 +80,5 @@ def load_config(path: str) -> GlobalConfig:
                         units=unit_config, 
                         hardware=hw_config, 
                         io=io_config)
-
 
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Dict, Any, Tuple
+from pathlib import Path
 import yaml
 
 """
@@ -29,15 +30,16 @@ class LatencyLUT:
     def lookup(self, op_type: str, m: int, n: int, k: int, bitw: int) -> float | None:
         return self._table.get((op_type, m, n, k, bitw), None)
 
-    def record(self, op_type: str, m: int, n: int, k: int, bitw: int, us: float):
+    def record(self, op_type: str, m: int, n: int, k: int, bitw: int, us: float, alpha=0.1):
         """
-        Update the LUT with a new measurement.
-        Policy: keep the min of existing and new (to be conservative).
+        from chat: use the exponential moving average because it smooths well. 
         """
         key = (op_type, m, n, k, bitw)
         old = self._table.get(key)
-        if old is None or us < old:
+        if old is None:
             self._table[key] = us
+        else:
+            self._table[key] = old * (1 - alpha) + us * alpha
 
     def dump(self, path: str | None = None):
         """

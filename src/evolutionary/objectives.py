@@ -30,7 +30,18 @@ def memory_bytes(param_counts: List[int], bits: Tuple[int, ...], overhead: int =
 
 
 def latency_ms_lut(lut: LatencyLUT, op_shapes: List[Tuple[str, int, int, int, int]], bytes_total: int) -> float:
-    return lut.estimate(op_shapes, bytes_total)
+    total_us = 0.0
+    for op_type, m, n, k, bitw in ops:
+        us = lut.lookup(op_type, m, n, k, bitw)
+        if us is None:
+            raise KeyError(f"No LUT entry for {(op_type, m, n, k, bitw)}")
+        total_us += us 
+    
+    # calculate bandwidth
+    bw_alpha = lut.overheads.get("bandwidth_alpha", 0.0) if hasattr(lut, "overheads") else 0.0
+    total_us += bw_alpha * bytes_total / 1e6
+    return total_us / 1000 # return ms 
+
 
 
 def mock_val_loss(bits: Tuple[int, ...], base: float = 3.0) -> float:

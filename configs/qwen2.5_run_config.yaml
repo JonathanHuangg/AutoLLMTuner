@@ -1,58 +1,67 @@
 run_id: qwen2.5-evoq-v001
 
-# Qwen 2.5 7B Instruct Configuration
-model:
-  name_or_path: Qwen/Qwen2.5-7B-Instruct  # Or use local path: /path/to/qwen2.5-7b-instruct
-  backend: gptq                            # gptq | awq | bitsandbytes | torchao | fakequant
-  precision_options:
-    default: [3,4,6,8]
-    per_layer_overrides:
-      embed_tokens: [6,8]
-      ln_f: [8]
+io:
+  out_dir: runs 
 
-# Evaluation settings
-eval:
-  datasets:
-    perplexity: {name: wikitext2, split: validation, max_samples: 2000}
-    tasks:
-      - {name: hella, max_samples: 500}
-      - {name: mmlu_stem, max_samples: 500}
+models:
+  name_or_path: Qwen/Qwen2.5-7B-Instruct
+  default_fp_bits: 16
+  param_counts_file: configs/qwen2.5_param_counts.json
+  bakend: bitsandbytes 
+
+  precision_options:
+    default: [8, 16]
+    per_layer_overrides:
+      embed_tokens: [6, 8]
+      ln_f: [8]
+  
+  units:
+    spec_file: configs/quant_units.yaml
+    layer_spec_file: configs/qwen2.5_layer_spec.yaml 
+  
+  hardware:
+    lut_file: configs/hardware.yaml 
+    devices: [0]
+    torch_dtype: float16
+    deterministic: true
+  
+  evaluation:
+    measure_latency: REAL 
+
+    # cheap first half, more expensive second half
+    val_tokens_schedule: [512, 2048]
+    datasets:
+  
   latency:
     prompt_len: 512
     gen_len: 128
     batch_size: 1
     warmup_runs: 2
     measure_runs: 5
-
-objectives: [acc, latency, vram]
-budgets:
-  max_vram_gb: 16
-
-moea:
-  population: 64
-  children_per_gen: 96
+run:
+  seed: 67
+  population_size: 64
   generations: 30
-  mutation:
-    rate_start: 0.03
-    rate_end: 0.005
-    step_size: 1
-  crossover_prob: 0.8
+  mutation_rate: 0.03
+  crossover_probability: 0.8
   elitism_frac: 0.1
+  threads: 1
   selection_pressure: 3
 
-hardware:
-  devices: [0,1]
-  torch_dtype: float16
-  deterministic: true
+objectives:
+  - acc
+  - latencyvram
+
+budgets:
+  max_vram_gb: 64
 
 logging:
   tracker: pace
   pace:
     project: quant/qwen-frontiers
     run_name: ${run_id}
-    tags: ["qwen-2.5-7b","nsga2","gptq"]
+    tags: ["qwen-2.5-7b", "nsga2", "gptq"]
     upload_artifacts: true
     upload_tables: true
 
-paths:
-  out_dir: runs/${run_id}
+  

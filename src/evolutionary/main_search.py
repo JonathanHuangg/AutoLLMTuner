@@ -16,10 +16,12 @@ import yaml
 
 # build a ParamLayout from the yAML 
 def _load_units_and_params(config: GlobalConfig, units_path: str) -> ParamLayout:
+    # unit names
     with open(units_path, "r") as f:
         units_yaml = yaml.safe_load(f)
     unit_names: List[str] = units_yaml["units"]
 
+    # param_counts
     if config.model.param_counts_file:
         with open(config.model.param_counts_file, "r") as f:
             pc = json.load(f)
@@ -29,7 +31,30 @@ def _load_units_and_params(config: GlobalConfig, units_path: str) -> ParamLayout
     
     ties = GroupTies(unit_names, units_path)
     excluded_mask = ties.excluded_mask
-    return ParamLayout(units=unit_names, param_counts=param_counts, excluded_mask=excluded_mask)
+
+    # layer_spec
+    layer_spec_path = config.units.spec_file
+    with open(layer_spec_path, "r") as f:
+        layer_spec_yaml = yaml.safe_load(f)
+     
+    units_ops = Dict[str, List[OpSpec]] = {}
+    for u in unit_names:
+        ops_from_yaml = layer_spec_yaml["units"][u]["ops"]
+        ops: List[OpSpec] = []
+        for o in ops_from_yaml:
+            ops.append(OpSpec(
+                op_type=o["op_type"],    # or "op_type" depending on your schema
+                m=int(o["m"]),
+                n=int(o["n"]),
+                k=int(o["k"]),
+            ))
+        unit_ops[u] = ops
+    return ParamLayout(
+        units=unit_names, 
+        param_counts=param_counts, 
+        excluded_mask=excluded_mask
+        unit_ops=unit_ops
+    )
 
 def main():
     ap = argparse.ArgumentParser()

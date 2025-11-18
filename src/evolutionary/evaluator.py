@@ -20,14 +20,24 @@ class Evaluator:
     def _bytes_total(self, bits: Tuple[int, ...]) -> int:
         return memory_bytes(self.layout.param_counts, bits, overhead=0)
 
-    def _latency(self, bits: Tuple[int, ...]) -> float:
-        # With no op-shape metadata yet, use LUT bandwidth term as a proxy when requested.
+    def _measure_latency(self, bits: Tuple[int, ...]) -> float:
         bytes_total = self._bytes_total(bits)
-        if self.measure_latency == latency_config.NONE:
-            return 0.0
+        approximate_ms = latency_ms_lut(self.lut, [], bytes_total)
+        approximate_us = approximate_ms * 1000
+        return approximate_us
+        
+    def _latency(self, bits: Tuple[int, ...]) -> float:
+        bytes_total = self._bytes_total(bits)
+        
+        op_list = []
+        for idx, unit_name in enumerate(self.layout.units):
+            if (self.layout.excluded_mask[idx]):
+                continue 
+            bits = bits[idx]
+            for op in self.layout.unit_ops[unit_name]:
+                op_list.append((op.op_type, op.m, op.n, op.k, bitw))
         if self.measure_latency == latency_config.LOOKUP:
-            return latency_ms_lut(self.lut, [], bytes_total)
-        # REAL path to be filled with actual measurement hooks.
+            return latency_ms_lut(self.lut, op_list, bytes_total)
         return 0.0
 
     def backend_eval(self, bits: Tuple[int, ...], val_tokens: int) -> float:

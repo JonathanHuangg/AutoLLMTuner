@@ -32,6 +32,13 @@ class EvaluatedIndividual:
     fit: Fitness
     aux: Dict[str, Any] # extra data from evaluation 
 
+@dataclass
+class OpSpec:
+    op_type: str 
+    m: int 
+    n: int 
+    k: int
+
 # maps the model to the quantization config
 # represents the ENTIRE model, all of the layer
 @dataclass
@@ -39,6 +46,7 @@ class ParamLayout:
     units: List[str]           # unit names in order
     param_counts: List[int]    # same length as units
     excluded_mask: List[bool]  # True if unit excluded (fixed to fp bits). Which layers should be quantized
+    unit_ops: Dict[str, List[OpSpec]]
 
 def write_metadata(path:str, 
                    bits: Tuple[int, ...], 

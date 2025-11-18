@@ -1,18 +1,9 @@
-# completely GPT as a template
 # a latencyLUT is a precomputed lookup table that stores measured
 # latency for basi building blocks
 
 # the actual data should come from benchmarks
 
 # TODO to fill out
-  # 1) make sure you are ON the GPU that we are using when testing
-  # 2) run the model dry. Make it print the shapes of all of its tensors (like matmul)
-  # 2) Create a benchmark directory (done, you're so welcome :D)
-  # 3) Create a benchmark script
-  # 3.1) Create fake input + weights in our different precisions 
-  # 3.2) warmup the matmuls (like cache warming)
-  # 3.3) range over something like 10 iterations
-  # 3.4) run it and get the average. can use like torch.do_bench() or smt prolly
 latency_lut:
   - key: ["matmul", 128, 512, 3584, 2]
     us: 23.329920209944248

@@ -54,8 +54,3 @@ class HFModelLoader:
             }
         return self.layer_metadata
 
-
-# Keep backwards compatibility
-class LlamaModelLoader(HFModelLoader):
-    """Backwards compatible alias for LlamaModelLoader"""
-    pass

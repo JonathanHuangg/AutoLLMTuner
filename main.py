@@ -1,82 +1,90 @@
-import json
-import sys
-import time
-from pathlib import Path
+import random
 
 import polars as pl
+import torch
 from tqdm import tqdm
-from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-MODEL = "Qwen/Qwen2.5-7B-Instruct"
+from evaluate import evaluate_output
+from run import get_model, run_sample
 
-def get_model(config: list[bool]):
-    skip_modules = [f".{i}" for i, q in enumerate(config) if not q]
-    quant = BitsAndBytesConfig(load_in_8bit=True, llm_int8_skip_modules=skip_modules)
-    tokenizer = AutoTokenizer.from_pretrained(MODEL, trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained(
-        MODEL,
-        quantization_config=quant,
-        trust_remote_code=True,
-        device_map="auto",
-    )
-    return tokenizer, model
+POPULATION_SIZE = 4
+GENERATIONS = 5
+LAYERS = 28
+PROBLEMS_PER_EVAL = 6
+MUTATION_RATE = 0.1
 
-def run_sample(tokenizer, model, sample: str):
-    device = model.device
-    text = tokenizer.apply_chat_template([
-        {
-            "role": "system",
-            "content": "You are a math teacher who helps students with their math questions. You give the answer with solution steps. Please enclose your final answer in <answer></answer> tags.",
-        },
-        {
-            "role": "user",
-            "content": sample,
-        }
-    ], tokenize=False, add_generation_prompt=True)
-    inputs = tokenizer(text, return_tensors="pt").to(device)
-    outputs = model.generate(**inputs, max_new_tokens=4000)
-    text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+def fitness(num_correct, memory_footprint):
+    return num_correct - 0.5 * 1e-9 * (memory_footprint - 8e9)
 
-    # not sure if this does anything, want to make sure we're not leaking VRAM
-    del inputs
-    del outputs
+def format_config(config):
+    return "".join(['1' if q else '0' for q in config])
 
-    return text
+def run_model(config, samples):
+    tokenizer, model = get_model(config)
+    results = []
+    for sample in tqdm(samples):
+        question = sample["problem"]
+        answer = sample["answer"]
+        output = run_sample(tokenizer, model, question)
+        student_answer = output.split("assistant\n")[-1].strip()
+        results.append((question, answer, student_answer))
+
+    num_correct = 0
+    for question, answer, student_answer in results:
+        score = evaluate_output(question, answer, student_answer)
+        num_correct += score
+
+    memory_footprint = model.get_memory_footprint()
+
+    return num_correct, memory_footprint
+
+def run_population(population, samples):
+    results = []
+    for config in population:
+        num_correct, memory_footprint = run_model(config, samples)
+        fit = fitness(num_correct, memory_footprint)
+        results.append(fit)
+    torch.cuda.empty_cache()
+    return results
 
 def main():
-    if len(sys.argv) < 3:
-        print(f"Usage: python {sys.argv[0]} <config.json> <output_dir>")
-        return
+    MATH500 = pl.read_ndjson("hf://datasets/HuggingFaceH4/MATH-500/test.jsonl").to_dicts()
 
-    with open(sys.argv[1], "r") as f:
-        config = json.load(f)
+    population = []
+    for _ in range(POPULATION_SIZE):
+        config = [random.choice([True, False]) for _ in range(LAYERS)]
+        population.append(config)
 
-    output_dir = Path(sys.argv[2])
-    output_dir.mkdir(parents=True, exist_ok=True)
+    for generation in range(GENERATIONS):
+        print(f"Generation {generation}")
+        for config in population:
+            print(f"  {format_config(config)}")
+        samples = random.sample(MATH500, PROBLEMS_PER_EVAL)
+        results = run_population(population, samples)
+        for config, fit in zip(population, results):
+            print(f"  {format_config(config)}: Fitness = {fit}")
 
-    tokenizer, model = get_model(config)
+        # Select the top half of the population
+        sorted_population = [
+            config for _, config in sorted(
+                zip(results, population), reverse=True
+            )
+        ]
+        population = sorted_population[:POPULATION_SIZE // 2]
 
-    with open(output_dir / "memory", "w") as f:
-        f.write(str(model.get_memory_footprint()))
+        # Cross over
+        while len(population) < POPULATION_SIZE:
+            parent1 = random.choice(population)
+            parent2 = random.choice(population)
+            crossover_point = random.randint(1, LAYERS - 1)
+            child = parent1[:crossover_point] + parent2[crossover_point:]
+            population.append(child)
 
-    dataset = pl.read_parquet("math50.parquet")
-
-    for i, row in enumerate(tqdm(dataset.to_dicts())):
-        sample = row["problem"]
-        start_time = time.time()
-        output = run_sample(tokenizer, model, sample)
-        end_time = time.time()
-
-        with open(output_dir / f"{i:05d}.json", "w") as f:
-            json.dump({
-                "unique_id": row["unique_id"],
-                "problem": sample,
-                "solution": row["solution"],
-                "answer": row["answer"],
-                "output": output,
-                "time": end_time - start_time,
-            }, f, indent=4)
-
+        # Mutate
+        for i in range(len(population)):
+            for j in range(LAYERS):
+                if random.random() < MUTATION_RATE:
+                    population[i][j] = not population[i][j]
 
 if __name__ == "__main__":
     main()

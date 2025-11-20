@@ -4,7 +4,7 @@ from pathlib import Path
 
 import torch
 import yaml
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoConfig
 
 
 MODEL_NAME = "Qwen/Qwen2.5-7B-Instruct"
@@ -16,70 +16,52 @@ BENCH_ITERS = 50
 # Bitwidths we care about
 BITWIDTHS = [2, 3, 4, 6, 8, 16]
 
+# Resolve project root: .../AutoLLMTuner
+THIS_FILE = Path(__file__).resolve()
+PROJECT_ROOT = THIS_FILE.parents[2]  # yaml_gathering -> src -> AutoLLMTuner
+CONFIGS_DIR = PROJECT_ROOT / "configs"
 
-def collect_linear_shapes(seq_len: int = 128):
+
+def collect_linear_shapes(seq_len: int = 128, batch_size: int = 1):
     """
-    Load Qwen2.5-7B on CPU, run a dummy forward pass and collect
-    (m, n, k) shapes for all nn.Linear layers.
+    Collect representative (m, n, k) shapes for Qwen2.5-7B *without*
+    loading model weights.
 
     We interpret a Linear as:  (m, k) @ (k, n) -> (m, n)
     where:
-      - m = batch * seq_len
-      - k = in_features
-      - n = out_features
+      - m = batch_size * seq_len
+      - k, n depend on hidden_size / intermediate_size and the projection type.
     """
-    print(f"Loading {MODEL_NAME} on CPU just to inspect architecture...")
-    model = AutoModelForCausalLM.from_pretrained(
-        MODEL_NAME,
-        torch_dtype=torch.float16,   # dtype doesn't really matter for shapes
-        device_map=None,            # force CPU
-        low_cpu_mem_usage=True,
-    )
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    print(f"Loading config for {MODEL_NAME} (no weights)...")
+    cfg = AutoConfig.from_pretrained(MODEL_NAME, trust_remote_code=True)
+
+    hidden_size = cfg.hidden_size
+    intermediate_size = getattr(cfg, "intermediate_size", hidden_size * 4)
+
+    print(f"hidden_size={hidden_size}, intermediate_size={intermediate_size}")
+
+    m = batch_size * seq_len
 
     shapes = set()
 
-    def make_hook(mod_name, linear_module):
-        def hook(module, inputs, output):
-            # inputs[0] is typically (..., in_features)
-            x = inputs[0]
-            # ensure it's at least 2D
-            x_shape = x.shape
-            if x.dim() < 2:
-                return
+    # Attention projections: q, k, v, o: hidden -> hidden
+    # (m, k=hidden, n=hidden)
+    shapes.add((m, hidden_size, hidden_size))
 
-            # Flatten everything except the last dim
-            m = math.prod(x_shape[:-1])
-            k = linear_module.in_features
-            n = linear_module.out_features
+    # MLP gate/up: hidden -> intermediate
+    # (m, k=hidden, n=intermediate)
+    shapes.add((m, intermediate_size, hidden_size))   # treat as (m, k, n) for matmul(m,k)@(k,n)
 
-            shapes.add((m, n, k))
-        return hook
+    # MLP down: intermediate -> hidden
+    # (m, k=intermediate, n=hidden)
+    shapes.add((m, hidden_size, intermediate_size))
 
-    hooks = []
-    for name, mod in model.named_modules():
-        if isinstance(mod, torch.nn.Linear):
-            hooks.append(mod.register_forward_hook(make_hook(name, mod)))
-
-    # Build a dummy input with fixed seq_len to get representative shapes
-    dummy = tokenizer(
-        "Dummy prompt for shape capture.",
-        return_tensors="pt",
-        padding="max_length",
-        truncation=True,
-        max_length=seq_len,
-    )
-
-    with torch.no_grad():
-        _ = model(**dummy)
-
-    for h in hooks:
-        h.remove()
+    # You can extend this with other ops (embed, lm_head) if you care.
 
     shapes = sorted(shapes)
-    print("Collected unique Linear shapes (m, n, k):")
-    for m, n, k in shapes:
-        print(f"  (m={m}, n={n}, k={k})")
+    print("Representative Linear shapes (m, n, k) we'll benchmark:")
+    for m_, n_, k_ in shapes:
+        print(f"  (m={m_}, n={n_}, k={k_})")
 
     return shapes
 
@@ -96,7 +78,7 @@ def bench_matmul(m: int, n: int, k: int, dtype=torch.float16) -> float:
 
     # Warmup
     for _ in range(WARMUP_ITERS):
-        c = a @ b
+        _ = a @ b
     torch.cuda.synchronize()
 
     times_ms = []
@@ -104,7 +86,7 @@ def bench_matmul(m: int, n: int, k: int, dtype=torch.float16) -> float:
         start = torch.cuda.Event(enable_timing=True)
         end = torch.cuda.Event(enable_timing=True)
         start.record()
-        c = a @ b
+        _ = a @ b
         end.record()
         torch.cuda.synchronize()
         times_ms.append(start.elapsed_time(end))  # ms
@@ -115,16 +97,16 @@ def bench_matmul(m: int, n: int, k: int, dtype=torch.float16) -> float:
 
 def main():
     if not torch.cuda.is_available():
-        raise RuntimeError("CUDA is not available. Run this on a GPU node (salloc ... --gres=gpu:1).")
+        raise RuntimeError(
+            "CUDA is not available. Run this on a GPU node (srun/salloc ... --gres=gpu:1)."
+        )
 
     print("Using CUDA device:", torch.cuda.get_device_name(0))
+    print(f"Project root: {PROJECT_ROOT}")
+    print(f"Configs dir:  {CONFIGS_DIR}")
 
-    # 1) Get representative (m, n, k) shapes from Qwen2.5
-    shapes = collect_linear_shapes(seq_len=128)
-
-    # Optionally, you might want to prune shapes that are very small or duplicates
-    # In practice Qwen usually has just a few distinct (in_features, out_features).
-    # We'll just use everything we collected.
+    # 1) Get representative (m, n, k) shapes from Qwen2.5 config
+    shapes = collect_linear_shapes(seq_len=128, batch_size=1)
 
     # 2) Benchmark each shape once in fp16 and reuse for each bitwidth
     latency_lut_entries = []
@@ -135,8 +117,6 @@ def main():
         print(f"  avg latency (fp16) ≈ {base_us:.2f} µs")
 
         # For now, store the same measured latency for all bitwidths.
-        # If you later have real kernels for 2/3/4/6-bit, you can replace
-        # this with actual measurements or a more principled scaling.
         for bitw in BITWIDTHS:
             entry = {
                 "key": ["matmul", int(m), int(n), int(k), int(bitw)],
@@ -152,7 +132,7 @@ def main():
         },
     }
 
-    out_path = Path("configs/hardware.yaml")
+    out_path = CONFIGS_DIR / "hardware.yaml"
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     with out_path.open("w") as f:

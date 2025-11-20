@@ -1,67 +1,37 @@
 run_id: qwen2.5-evoq-v001
 
 io:
-  out_dir: runs 
+  out_dir: ../runs
 
-models:
-  name_or_path: Qwen/Qwen2.5-7B-Instruct
+model:
+  name: Qwen/Qwen2.5-7B-Instruct
+
+  param_counts_file: ../configs/qwen2.5_param_counts.json
+
   default_fp_bits: 16
-  param_counts_file: configs/qwen2.5_param_counts.json
-  bakend: bitsandbytes 
 
-  precision_options:
-    default: [8, 16]
-    per_layer_overrides:
-      embed_tokens: [6, 8]
-      ln_f: [8]
-  
-  units:
-    spec_file: configs/quant_units.yaml
-    layer_spec_file: configs/qwen2.5_layer_spec.yaml 
-  
-  hardware:
-    lut_file: configs/hardware.yaml 
-    devices: [0]
-    torch_dtype: float16
-    deterministic: true
-  
-  evaluation:
-    measure_latency: REAL 
+units:
+  spec_file: ../configs/quant_units.yaml
 
-    # cheap first half, more expensive second half
-    val_tokens_schedule: [512, 2048]
-    datasets:
-  
-  latency:
-    prompt_len: 512
-    gen_len: 128
-    batch_size: 1
-    warmup_runs: 2
-    measure_runs: 5
+  layer_spec_file: ../configs/qwen2.5_layer_spec.yaml
+
+hardware:
+  lut_file: ../configs/hardware.yaml
+
 run:
   seed: 67
-  population_size: 64
-  generations: 30
+  population_size: 32
+  generations: 24
   mutation_rate: 0.03
   crossover_probability: 0.8
   elitism_frac: 0.1
-  threads: 1
-  selection_pressure: 3
 
-objectives:
-  - acc
-  - latencyvram
+evaluation:
 
-budgets:
-  max_vram_gb: 64
+  val_tokens_schedule: [512, 2048]
 
-logging:
-  tracker: pace
-  pace:
-    project: quant/qwen-frontiers
-    run_name: ${run_id}
-    tags: ["qwen-2.5-7b", "nsga2", "gptq"]
-    upload_artifacts: true
-    upload_tables: true
+  measure_latency: real
 
-  
+  save_checkpoints: all
+
+

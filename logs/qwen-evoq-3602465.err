@@ -1,0 +1,30 @@
+/storage/ice1/2/3/jhuang691/conda_envs/autollmtuner/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/storage/ice1/2/3/jhuang691/AutoLLMTuner/src/yaml_gathering/hardwareyaml.py", line 146, in <module>
+    main()
+  File "/storage/ice1/2/3/jhuang691/AutoLLMTuner/src/yaml_gathering/hardwareyaml.py", line 100, in main
+    raise RuntimeError(
+RuntimeError: CUDA is not available. Run this on a GPU node (srun/salloc ... --gres=gpu:1).
+/storage/ice1/2/3/jhuang691/conda_envs/autollmtuner/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:22<01:06, 22.24s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:48<00:49, 24.87s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [01:10<00:23, 23.30s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:16<00:00, 16.62s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:16<00:00, 19.19s/it]
+Traceback (most recent call last):
+  File "/storage/ice1/2/3/jhuang691/conda_envs/autollmtuner/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/storage/ice1/2/3/jhuang691/conda_envs/autollmtuner/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/storage/ice1/2/3/jhuang691/AutoLLMTuner/src/evolutionary/main_search.py", line 207, in <module>
+    main()
+  File "/storage/ice1/2/3/jhuang691/AutoLLMTuner/src/evolutionary/main_search.py", line 101, in main
+    evaluator = Evaluator(
+  File "/storage/ice1/2/3/jhuang691/AutoLLMTuner/src/evolutionary/evaluator.py", line 32, in __init__
+    self.quant_backend: BnbQuantizeBackend | None = BnbQuantizeBackend(layout)
+  File "/storage/ice1/2/3/jhuang691/AutoLLMTuner/src/evolutionary/bnb_quantize.py", line 48, in __init__
+    parent, child_name, lin = self._resolve_linear(self.model, unit_name)
+  File "/storage/ice1/2/3/jhuang691/AutoLLMTuner/src/evolutionary/bnb_quantize.py", line 84, in _resolve_linear
+    parent = getattr(parent, part)
+  File "/storage/ice1/2/3/jhuang691/conda_envs/autollmtuner/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1964, in __getattr__
+    raise AttributeError(
+AttributeError: 'Qwen2ForCausalLM' object has no attribute 'layers'

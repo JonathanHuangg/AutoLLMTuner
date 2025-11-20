@@ -1,0 +1,25 @@
+---------------------------------------
+Begin Slurm Prolog: Nov-19-2025 17:59:23
+Job ID:    3602465
+User ID:   jhuang691
+Account:   coc
+Job name:  qwen-evoq
+Partition: ice-gpu
+QOS:       coc-ice
+---------------------------------------
+[Wed Nov 19 17:59:26 EST 2025] Running hardwareyaml.py to regenerate configs/hardware.yaml
+[Wed Nov 19 18:01:11 EST 2025] Finished hardwareyaml.py
+[Wed Nov 19 18:01:11 EST 2025] Starting evolutionary.main_search
+[Wed Nov 19 18:03:25 EST 2025] Finished evolutionary.main_search
+---------------------------------------
+Begin Slurm Epilog: Nov-19-2025 18:03:25
+Job ID:        3602465
+User ID:       jhuang691
+Account:       coc
+Job name:      qwen-evoq
+Resources:     cpu=1,gres/gpu:mi210=1,mem=64G,node=1
+Rsrc Used:     cput=00:04:03,vmem=0,walltime=00:04:03,mem=29493892K,energy_used=0
+Partition:     ice-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-005-17-0
+---------------------------------------

@@ -5,7 +5,8 @@ Generate all visualization outputs (2D/3D Pareto, evolution progress, bit heatma
 
 import argparse
 from .utils import load_results
-from .pareto_frontier import plot_pareto, plot_pareto_3d
+from .pareto_frontier import plot_pareto, plot_pareto_3d, plot_all_non_frontier
+from .summary_stats import plot_summary_statistics
 from .evolutionary_progress import plot_evolution_progress
 from .bit_heatmap import plot_bit_allocation_heatmap
 
@@ -17,6 +18,8 @@ def generate_all_plots(results_dir: str, save_dir: str):
     plot_pareto_3d(df, save_dir=save_dir)
     plot_evolution_progress(df, save_dir=save_dir)
     plot_bit_allocation_heatmap(df, save_dir=save_dir)
+    plot_all_non_frontier(df, save_dir=save_dir)
+    plot_summary_statistics(df, save_dir=save_dir)
 
 
 def main():

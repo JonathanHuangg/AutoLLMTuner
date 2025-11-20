@@ -208,7 +208,6 @@ exclude:
 - layers.*.input_layernorm
 - layers.*.post_attention_layernorm
 choices:
-- 2
 - 4
 - 8
 - 16

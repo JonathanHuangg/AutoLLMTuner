@@ -5,14 +5,15 @@ import yaml
 
 """
 Hardware latency estimator. 
-Approximates how a long will take given a list of quantized operations
-Does not run the model
+Approximates how long an op will take given a list of quantized operations.
+Does not run the model.
 """
+
 
 class LatencyLUT:
     def __init__(self, path: str):
         self.path = Path(path)
-        self._table = {}  # (op_type, m, n, k, bitw) -> us
+        self._table: Dict[Tuple[str, int, int, int, int], float] = {}  # (op_type, m, n, k, bitw) -> us
 
         if self.path.exists():
             with self.path.open("r") as f:
@@ -23,16 +24,23 @@ class LatencyLUT:
                 self._table[(op_type, m, n, k, bitw)] = us
 
             # store any extra overhead fields if needed
-            self._overheads = data.get("overheads", {})
+            self._overheads: Dict[str, Any] = data.get("overheads", {})
         else:
             self._overheads = {}
+
+    @property
+    def overheads(self) -> Dict[str, Any]:
+        """
+        Expose overhead configuration (e.g. {"bandwidth_alpha": ...}) in a read-only way.
+        """
+        return self._overheads
 
     def lookup(self, op_type: str, m: int, n: int, k: int, bitw: int) -> float | None:
         return self._table.get((op_type, m, n, k, bitw), None)
 
-    def record(self, op_type: str, m: int, n: int, k: int, bitw: int, us: float, alpha=0.1):
+    def record(self, op_type: str, m: int, n: int, k: int, bitw: int, us: float, alpha: float = 0.1):
         """
-        from chat: use the exponential moving average because it smooths well. 
+        Record a latency measurement using an exponential moving average.
         """
         key = (op_type, m, n, k, bitw)
         old = self._table.get(key)

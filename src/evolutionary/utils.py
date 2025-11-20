@@ -4,7 +4,7 @@ import random
 from typing import Tuple
 
 # Valid bit-width choices (exported constant)
-BITS_CHOICES: Tuple[int, ...] = (2, 4, 8, 16, 32)
+BITS_CHOICES: Tuple[int, ...] = (4, 8, 16)
 
 
 def sha1_hash(data: bytes) -> str:

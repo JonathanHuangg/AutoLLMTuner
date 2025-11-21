@@ -1,0 +1,128 @@
+[
+  {
+    "id": 1,
+    "bits": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "val_loss": 2.1,
+    "mem_bytes": 6000000000,
+    "latency_ms": 20.0,
+    "memory_gb": 6.0,
+    "seed_tag": "s1"
+  },
+  {
+    "id": 2,
+    "bits": [
+      6,
+      6,
+      6,
+      6
+    ],
+    "val_loss": 2.3,
+    "mem_bytes": 4500000000,
+    "latency_ms": 15.0,
+    "memory_gb": 4.5,
+    "seed_tag": "s2"
+  },
+  {
+    "id": 3,
+    "bits": [
+      4,
+      4,
+      4,
+      4
+    ],
+    "val_loss": 2.8,
+    "mem_bytes": 3000000000,
+    "latency_ms": 12.0,
+    "memory_gb": 3.0,
+    "seed_tag": "s3"
+  },
+  {
+    "id": 4,
+    "bits": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "val_loss": 3.5,
+    "mem_bytes": 2200000000,
+    "latency_ms": 10.0,
+    "memory_gb": 2.2,
+    "seed_tag": "s4"
+  },
+  {
+    "id": 5,
+    "bits": [
+      2,
+      2,
+      2,
+      2
+    ],
+    "val_loss": 5.0,
+    "mem_bytes": 1600000000,
+    "latency_ms": 8.5,
+    "memory_gb": 1.6,
+    "seed_tag": "s5"
+  },
+  {
+    "id": 6,
+    "bits": [
+      8,
+      4,
+      8,
+      4
+    ],
+    "val_loss": 2.4,
+    "mem_bytes": 4200000000,
+    "latency_ms": 18.0,
+    "memory_gb": 4.0,
+    "seed_tag": "s6"
+  },
+  {
+    "id": 7,
+    "bits": [
+      6,
+      8,
+      6,
+      8
+    ],
+    "val_loss": 2.0,
+    "mem_bytes": 5200000000,
+    "latency_ms": 25.0,
+    "memory_gb": 7.0,
+    "seed_tag": "s7"
+  },
+  {
+    "id": 8,
+    "bits": [
+      4,
+      8,
+      4,
+      8
+    ],
+    "val_loss": 2.6,
+    "mem_bytes": 3500000000,
+    "latency_ms": 14.0,
+    "memory_gb": 3.5,
+    "seed_tag": "s8"
+  },
+  {
+    "id": 9,
+    "bits": [
+      8,
+      2,
+      8,
+      2
+    ],
+    "val_loss": 4.0,
+    "mem_bytes": 3900000000,
+    "latency_ms": 22.0,
+    "memory_gb": 3.9,
+    "seed_tag": "s9"
+  }
+]

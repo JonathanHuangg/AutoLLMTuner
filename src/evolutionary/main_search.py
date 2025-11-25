@@ -25,7 +25,7 @@ from .core_evolutionary import (
     tournament_pick,
 )
 import yaml
-
+import multiprocessing as mp
 
 # Build a ParamLayout from YAML
 def _load_units_and_params(config: GlobalConfig) -> ParamLayout:
@@ -83,6 +83,8 @@ def main():
     ap.add_argument("--run-id", required=True)
     args = ap.parse_args()
 
+    mp.set_start_method("spawn")
+
     config = load_config(args.config)
     out_directory = os.path.join(config.io.out_dir, args.run_id)
     os.makedirs(out_directory, exist_ok=True)
@@ -130,17 +132,17 @@ def main():
     for epoch in tqdm(range(config.run.generations), desc="Generations", unit="gen"):        # In the YAML, val_tokens_schedule is [cheap_tokens, expensive_tokens].
         logger.info(f"[Epoch {epoch}] Starting evaluation phase")
 
-        # First half of generations uses the cheaper eval, second half uses the larger.
-        mid_point = config.run.generations // 2
-        if epoch < mid_point:
-            validation_tokens = config.evaluation.val_tokens_schedule[0]
-        else:
-            validation_tokens = config.evaluation.val_tokens_schedule[1]
+        # # First half of generations uses the cheaper eval, second half uses the larger.
+        # mid_point = config.run.generations // 2
+        # if epoch < mid_point:
+        #     validation_tokens = config.evaluation.val_tokens_schedule[0]
+        # else:
+        #     validation_tokens = config.evaluation.val_tokens_schedule[1]
 
-        logger.debug(f"[Epoch {epoch}] validation_tokens = {validation_tokens}")
+        # logger.debug(f"[Epoch {epoch}] validation_tokens = {validation_tokens}")
 
         logger.debug(f"[Epoch {epoch}] Evaluating {len(population)} individuals...")
-        evaluated = evaluator.evaluate_many(population, cache, validation_tokens)
+        evaluated = evaluator.evaluate_many(population, cache)
         logger.debug(f"[Epoch {epoch}] Evaluation complete")
 
         # Update archive
@@ -199,7 +201,7 @@ def main():
         population = next_population
         logger.debug(f"[Epoch {epoch}] Next population size = {len(next_population)}")
 
-        frontier_path = os.path.join(out_directory, "frontier.json")
+        frontier_path = os.path.join(out_directory, f"frontier_{epoch}.json")
         save_frontier(frontier_path, best_archive)
         logger.debug(f"[Epoch {epoch}] Frontier saved to {frontier_path}")
 

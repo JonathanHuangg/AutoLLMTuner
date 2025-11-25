@@ -8,6 +8,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import polars as pl
 from .data_models import ParamLayout
 import logging
+from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 MODEL_NAME = "Qwen/Qwen2.5-7B-Instruct"
@@ -73,7 +74,7 @@ class BnbQuantizeBackend:
             "hf://datasets/HuggingFaceH4/MATH-500/test.jsonl"
         )
         self.math_rows: List[Dict[str, str]] = (
-            self.math_df.select(["problem", "solution"]).to_dicts()
+            self.math_df.head(50).to_dicts()
         )
         logger.info(
             f"BnbQuantizeBackend: loaded MATH-500 with {len(self.math_rows)} rows."
@@ -83,7 +84,7 @@ class BnbQuantizeBackend:
         self, model: nn.Module, module_path: str
     ) -> tuple[nn.Module, str, nn.Linear]:
         """
-    
+
         parse "model.layers.0.self_attn.q_proj".
         """
         parts = module_path.split(".")
@@ -192,6 +193,15 @@ class BnbQuantizeBackend:
         q_lin = q_lin.to(self.device)
         return q_lin
 
+    def set_device(self, device: torch.device) -> None:
+        """
+        Set the device for the model.
+        """
+        if device != self.device:
+            logger.info(f"BnbQuantizeBackend: moving model to device={device}...")
+            self.model.to(device)
+            self.device = device
+
     def build_quantized_model(self, bits: Tuple[int, ...]) -> nn.Module:
         """
         build the whole model
@@ -239,75 +249,59 @@ class BnbQuantizeBackend:
         self.build_quantized_model(bits)
         self.model.eval()
 
-        total_loss = 0.0
-        total_tokens = 0
+        checker = AutoModelForCausalLM.from_pretrained(
+            MODEL_NAME,
+            trust_remote_code=True,
+            device_map=self.device,
+        )
+        checker_tokenizer = AutoTokenizer.from_pretrained(
+            MODEL_NAME,
+            trust_remote_code=True,
+        )
+
+        total_correct = 0
 
         for idx, row in enumerate(self.math_rows):
-            if total_tokens >= max_tokens:
-                break
-
             problem = row["problem"]
-            solution = row["solution"]
+            answer = row["answer"]
 
-            prompt = (
-                "You are a math teacher. Solve the following problem step by step.\n\n"
-                f"Problem:\n{problem}\n\nSolution:\n"
-            )
+            inputs = self.tokenizer(self.tokenizer.apply_chat_template([
+                {
+                    "role": "system",
+                    "content": "You are a math teacher. Solve the following problem step by step.",
+                },
+                {
+                    "role": "user",
+                    "content": problem,
+                },
+            ], tokenize=False, add_generation_prompt=True), return_tensors="pt").to(self.device)
+            outputs = self.model.generate(**inputs, max_new_tokens=max_tokens)
+            output_text = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+            output_answer = output_text.split("assistant\n")[-1].strip()
 
-            # Tokenize the prompt alone to get the split point.
-            prompt_enc = self.tokenizer(
-                prompt,
-                return_tensors="pt",
-                truncation=True,
-                max_length=self.max_seq_len,
-            )
-            prompt_ids = prompt_enc["input_ids"].to(self.device)
-            prompt_len = prompt_ids.shape[1]
-
-            # Tokenize prompt + solution (the training target).
-            full_text = prompt + solution
-            enc = self.tokenizer(
-                full_text,
-                return_tensors="pt",
-                truncation=True,
-                max_length=self.max_seq_len,
-            )
-
-            input_ids = enc["input_ids"].to(self.device)
-            attention_mask = enc["attention_mask"].to(self.device)
-
-            labels = input_ids.clone()
-            # Mask out the prompt; we only care about loss on the solution tokens.
-            labels[:, :prompt_len] = -100
-
-            with torch.no_grad():
-                outputs = self.model(
-                    input_ids=input_ids,
-                    attention_mask=attention_mask,
-                    labels=labels,
+            inputs = checker_tokenizer(checker_tokenizer.apply_chat_template([
+                {
+                    "role": "system",
+                    "content": "You are a math grader who grades students' answers to math questions. You compare the student's answer to the correct answer and give a score of 1 if they match and 0 if they do not. Please only respond with the score. Ignore minor formatting differences such as including variable names (i.e. '1' is acceptable for 'x=1' and vice-versa), units (i.e. '1' is acceptable for '1 meter' and vice-versa), dollar signs (i.e. '1' is acceptable for '$1' and vice-versa), etc.",
+                },
+                {
+                    "role": "user",
+                    "content": f"Question: {problem}\nCorrect Answer: {answer}\nStudent's Answer: {output_answer}"
+                },
+            ], tokenize=False, add_generation_prompt=True), return_tensors="pt").to(self.device)
+            checker_output = checker.generate(**inputs, max_new_tokens=10)
+            checker_text = checker_tokenizer.decode(checker_output[0], skip_special_tokens=True)
+            try:
+                score = int(checker_text.split("assistant\n")[-1].strip())
+                total_correct += score
+            except ValueError:
+                logger.warning(
+                    f"eval_bits: could not parse score from checker output: '{checker_text}'"
                 )
-                loss = outputs.loss
 
-            n_tokens = (labels != -100).sum().item()
-            if n_tokens == 0:
-                continue
-
-            total_loss += loss.item() * n_tokens
-            total_tokens += n_tokens
-
-            if idx == 0 or (idx + 1) % 10 == 0:
-                logger.debug(
-                    f"eval_bits: processed {idx+1}/{len(self.math_rows)} problems, "
-                    f"total_tokens={total_tokens}, current_loss={loss.item():.4f}"
-                )
-            if total_tokens >= max_tokens:
-                break
-
-        if total_tokens == 0:
-            return 0.0
-        
-        res = total_loss / float(total_tokens)
+        accuracy = total_correct / len(self.math_rows)
         logger.info(
-            f"eval_bits: finished, total_tokens={total_tokens}, avg_loss={res:.4f}"
+            f"eval_bits: completed evaluation for bits (len={len(bits)}), accuracy={accuracy:.4f}"
         )
-        return res
+
+        return 1.0 - accuracy  # return 1 - accuracy as "loss"

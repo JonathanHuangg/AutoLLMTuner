@@ -27,7 +27,7 @@ def _normalize_record(rec):
 def load_results(results_dir: str) -> pd.DataFrame:
     """Load all SQLITE result files and compute derived metrics."""
     records = []
-    
+
     # frontier json
     for file in glob.glob(f"{results_dir}/*.json"):
         with open(file, "r") as f:
@@ -36,7 +36,7 @@ def load_results(results_dir: str) -> pd.DataFrame:
         if isinstance(content, list):
             for rec in content:
                 records.append(_normalize_record(rec))
-    
+
     # sqlite
     sqlite_path = os.path.join(results_dir, "metrics.sqlite")
     if os.path.exists(sqlite_path):

@@ -4,3 +4,4 @@ runs/
 *.bin
 *.pt
 w
+__pycache__

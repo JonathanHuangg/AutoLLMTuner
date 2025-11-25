@@ -1,4 +1,4 @@
-run_id: qwen2.5-evoq-v001
+run_id: qwen2.5-evoq-v003
 
 io:
   out_dir: ../runs
@@ -20,8 +20,8 @@ hardware:
 
 run:
   seed: 67
-  population_size: 32
-  generations: 24
+  population_size: 16
+  generations: 10
   mutation_rate: 0.03
   crossover_probability: 0.8
   elitism_frac: 0.1
@@ -33,5 +33,3 @@ evaluation:
   measure_latency: real
 
   save_checkpoints: all
-
-

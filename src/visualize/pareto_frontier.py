@@ -6,7 +6,7 @@ from pathlib import Path
 from .utils import load_results, ensure_dir, compute_pareto_frontier, compute_pareto_frontier_multi
 
 
-def plot_pareto(df, x_col="latency_ms", y_col="val_loss",
+def plot_pareto(df, x_col="memory_gb", y_col="val_loss",
                 hue_col="seed_tag", save_dir=None):
     """Plot Cross Entropy Loss vs latency with Pareto frontier overlay."""
     sns.set(style="whitegrid", context="talk")
@@ -14,17 +14,17 @@ def plot_pareto(df, x_col="latency_ms", y_col="val_loss",
 
     pareto = compute_pareto_frontier(df, x_col, y_col, objective_y="min")
     print(f"[DEBUG] Plotting 2D Pareto: total points={len(df)}, pareto points={len(pareto)}")
-    
+
 
     # Plot all points first (non-Pareto points)
     plt.scatter(df[x_col], df[y_col], c='gray', alpha=0.4, s=60, label='All Points')
-    
+
     # Overlay Pareto frontier points in red
     plt.scatter(pareto[x_col], pareto[y_col], c='red', s=100, label='Pareto Frontier', zorder=5)
 
-    plt.title("Pareto Trade-off: Cross Entropy Loss vs Latency")
-    plt.xlabel("Latency (ms)")
-    plt.ylabel("Cross Entropy Loss (val_loss)")
+    plt.title("Pareto Trade-off: Loss vs Memory")
+    plt.xlabel("Memory (GB)")
+    plt.ylabel("Loss (incorrect answers)")
     plt.legend()
     plt.tight_layout()
 
@@ -76,7 +76,7 @@ def plot_all_non_frontier(df, x_col="latency_ms", y_col="val_loss",
         print(f"[INFO] Saved non-frontier plot to {out_path}")
     else:
         plt.show()
-        
+
 def plot_pareto_3d(df, save_dir=None):
     """Plot 3D Pareto frontier (val_loss, latency, memory)."""
     objectives = {'val_loss': 'min', 'latency_ms': 'min', 'memory_gb': 'min'}
@@ -85,11 +85,11 @@ def plot_pareto_3d(df, save_dir=None):
 
     fig = plt.figure(figsize=(10, 8))
     ax = fig.add_subplot(111, projection='3d')
-    
+
     # Plot all points first with better visibility
     ax.scatter(df["latency_ms"], df["memory_gb"], df["val_loss"],
                c='gray', alpha=0.5, s=30, label='All Points', edgecolors='none')
-    
+
     # Overlay Pareto frontier points
     ax.scatter(pareto["latency_ms"], pareto["memory_gb"], pareto["val_loss"],
                c='red', s=100, label='Pareto Frontier', edgecolors='darkred', linewidth=1.5, zorder=5)
@@ -98,7 +98,7 @@ def plot_pareto_3d(df, save_dir=None):
     ax.set_ylabel("Memory (GB)")
     ax.set_zlabel("Cross Entropy Loss (val_loss)")
     ax.legend(loc='upper left')
-    
+
     # Improve 3D visualization
     ax.grid(True, alpha=0.3)
     fig.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)

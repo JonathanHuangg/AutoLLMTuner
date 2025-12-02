@@ -1,0 +1,29 @@
+run_id: llama2-7b-evoq-v001
+
+io:
+  out_dir: ../runs
+
+model:
+  name: meta-llama/Llama-2-7b-hf
+  param_counts_file: ../configs/llama_param_counts.json
+  default_fp_bits: 16
+
+units:
+  spec_file: ../configs/quant_units.yaml
+  layer_spec_file: ../configs/llama_layer_spec.yaml
+
+hardware:
+  lut_file: ../configs/hardware.yaml
+
+run:
+  seed: 67
+  population_size: 16
+  generations: 10
+  mutation_rate: 0.03
+  crossover_probability: 0.8
+  elitism_frac: 0.1
+
+evaluation:
+  val_tokens_schedule: [512, 2048]
+  measure_latency: real
+  save_checkpoints: all

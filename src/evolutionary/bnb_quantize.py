@@ -11,7 +11,7 @@ import logging
 from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
-MODEL_NAME = "Qwen/Qwen2.5-7B-Instruct"
+MODEL_NAME = "arcee-ai/Trinity-Mini"
 
 
 class BnbQuantizeBackend:
@@ -250,12 +250,12 @@ class BnbQuantizeBackend:
         self.model.eval()
 
         checker = AutoModelForCausalLM.from_pretrained(
-            MODEL_NAME,
+            "Qwen/Qwen2.5-7B-Instruct",
             trust_remote_code=True,
             device_map=self.device,
         )
         checker_tokenizer = AutoTokenizer.from_pretrained(
-            MODEL_NAME,
+            "Qwen/Qwen2.5-7B-Instruct",
             trust_remote_code=True,
         )
 

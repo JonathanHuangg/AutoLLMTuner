@@ -98,6 +98,7 @@ def main():
     lut = LatencyLUT(config.hardware.lut_file)
     cache = MetricsCache(os.path.join(out_directory, "metrics.sqlite"))
     evaluator = Evaluator(
+        config.model.name,
         layout,
         lut,
         default_fp_bits=config.model.default_fp_bits,

@@ -11,7 +11,7 @@ import logging
 from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
-MODEL_NAME = "arcee-ai/Trinity-Mini"
+# MODEL_NAME = "arcee-ai/Trinity-Mini"
 
 
 class BnbQuantizeBackend:
@@ -21,17 +21,16 @@ class BnbQuantizeBackend:
     the whole model per evaluation.
     """
 
-    def __init__(self, layout: ParamLayout, device: str = "cuda:0") -> None:
+    def __init__(self, model_name: str, layout: ParamLayout, device: str = "cuda:0") -> None:
+        self.model_name = model_name
         self.layout = layout
         self.device = device
-        # Cap for MATH-500 sequences
-        self.max_seq_len = 2048
 
-        logger.info(f"BnbQuantizeBackend: using MODEL_NAME={MODEL_NAME}")
+        logger.info(f"BnbQuantizeBackend: using MODEL_NAME={self.model_name}")
         logger.info(f"BnbQuantizeBackend: loading tokenizer...")
         # Tokenizer / base model on CPU
         self.tokenizer = AutoTokenizer.from_pretrained(
-            MODEL_NAME,
+            self.model_name,
             trust_remote_code=True,
         )
 
@@ -40,7 +39,7 @@ class BnbQuantizeBackend:
         )
         # Keep a single base model; we will mutate its Linear modules in-place
         self.model = AutoModelForCausalLM.from_pretrained(
-            MODEL_NAME,
+            self.model_name,
             torch_dtype=torch.float16,
             device_map="cpu",
             trust_remote_code=True,

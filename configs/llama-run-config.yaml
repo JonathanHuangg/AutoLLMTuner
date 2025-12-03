@@ -4,12 +4,12 @@ io:
   out_dir: ../runs
 
 model:
-  name: meta-llama/Llama-2-7b-hf
+  name: meta-llama/Llama-2-7b-chat-hf
   param_counts_file: ../configs/llama_param_counts.json
   default_fp_bits: 16
 
 units:
-  spec_file: ../configs/quant_units.yaml
+  spec_file: ../configs/llama_units.yaml
   layer_spec_file: ../configs/llama_layer_spec.yaml
 
 hardware:

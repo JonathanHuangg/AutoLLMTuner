@@ -10,6 +10,7 @@ import logging
 import torch
 import multiprocessing as mp
 import multiprocessing.queues as mp_queues
+import time
 
 """
 Main wrapper for evaluating individuals:
@@ -26,6 +27,7 @@ logger = logging.getLogger(__name__)
 class Evaluator:
     def __init__(
         self,
+        model_name: str,
         layout: ParamLayout,
         lut: LatencyLUT,
         default_fp_bits: int,
@@ -41,7 +43,7 @@ class Evaluator:
 
         try:
             logger.info("Initializing BnbQuantizeBackend...")
-            self.quant_backend = BnbQuantizeBackend(layout)
+            self.quant_backend = BnbQuantizeBackend(model_name, layout)
             logger.info("BnbQuantizeBackend initialized successfully.")
         except Exception as e:
             logger.exception(

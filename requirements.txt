@@ -9,7 +9,8 @@ bitsandbytes
 tabulate>=0.9
 seaborn>=0.13
 toml>=0.10
-torch >= 2.3.1
+torch >= 2.9
+torchvision >= 0.24
 transformers >= 4.43.3
 polars
 accelerate

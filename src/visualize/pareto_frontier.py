@@ -37,6 +37,37 @@ def plot_pareto(df, x_col="memory_gb", y_col="val_loss",
     else:
         plt.show()
 
+def plot_pareto_loss_vs_latency(df, save_dir=None):
+    """Plot Cross Entropy Loss vs Latency with Pareto frontier overlay."""
+    sns.set(style="whitegrid", context="talk")
+    plt.figure(figsize=(8, 6))
+
+    x_col = "latency_ms"
+    y_col = "val_loss"
+    pareto = compute_pareto_frontier(df, x_col, y_col, objective_x="min", objective_y="min")
+    print(f"[DEBUG] Plotting Loss vs Latency Pareto: total points={len(df)}, pareto points={len(pareto)}")
+
+    # Plot all points first (non-Pareto points)
+    plt.scatter(df[x_col], df[y_col], c='gray', alpha=0.4, s=60, label='All Points')
+
+    # Overlay Pareto frontier points in red
+    plt.scatter(pareto[x_col], pareto[y_col], c='red', s=100, label='Pareto Frontier', zorder=5)
+
+    plt.title("Pareto Trade-off: Cross Entropy Loss vs Latency")
+    plt.xlabel("Latency (ms)")
+    plt.ylabel("Cross Entropy Loss (val_loss)")
+    plt.legend()
+    plt.tight_layout()
+
+    if save_dir:
+        out_dir = ensure_dir(save_dir)
+        out_path = out_dir / "pareto_loss_vs_latency.png"
+        plt.savefig(out_path, dpi=300)
+        plt.close()
+        print(f"[INFO] Saved Loss vs Latency Pareto plot to {out_path}")
+    else:
+        plt.show()
+
 def plot_all_non_frontier(df, x_col="latency_ms", y_col="val_loss",
                           save_dir=None):
     """Plot ONLY non-Pareto points (dominated points) to inspect the cloud."""
@@ -121,6 +152,7 @@ def main():
 
     df = load_results(args.results_dir)
     plot_pareto(df, save_dir=args.save_dir)
+    plot_pareto_loss_vs_latency(df, save_dir=args.save_dir)
     plot_pareto_3d(df, save_dir=args.save_dir)
 
 

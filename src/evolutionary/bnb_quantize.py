@@ -96,6 +96,13 @@ class BnbQuantizeBackend:
             if hasattr(inner, parts[0]):
                 parent = inner
 
+        # Mapping for Trinity model attribute names (AfmoeDecoderLayer uses different names)
+        # Trinity uses different MoE structure - try various common names
+        attribute_aliases = {
+            "block_sparse_moe": ["mlp", "moe", "afmoe", "block_sparse_moe", "experts", "ffn"],  # Try mlp first (common in some architectures)
+            "shared_experts": ["shared_experts", "shared", "experts", "shared_mlp"]  # Try alternatives if needed
+        }
+        
         for part in parts[:-1]:
             if part.isdigit():
                 try:
@@ -106,22 +113,113 @@ class BnbQuantizeBackend:
                         f"failed to index component '{part}' on {parent.__class__.__name__}"
                     ) from e
             else:
-                try:
+                # Try the original name first
+                if hasattr(parent, part):
                     parent = getattr(parent, part)
-                except AttributeError as e:
+                elif part in attribute_aliases:
+                    # Try alternative names for known aliases
+                    found = False
+                    for alias in attribute_aliases[part]:
+                        if hasattr(parent, alias):
+                            parent = getattr(parent, alias)
+                            found = True
+                            break
+                    if not found:
+                        # Debug: list available attributes (both properties and modules)
+                        all_attrs = dir(parent)
+                        # Filter to get non-private, non-callable attributes
+                        available_attrs = []
+                        for name in all_attrs:
+                            if name.startswith('_'):
+                                continue
+                            try:
+                                attr = getattr(parent, name)
+                                # Include both callable and non-callable, but prioritize modules
+                                if isinstance(attr, nn.Module) or not callable(attr):
+                                    available_attrs.append(name)
+                            except:
+                                pass
+                        
+                        logger.error(
+                            f"Available attributes on {parent.__class__.__name__}: {available_attrs}"
+                        )
+                        raise AttributeError(
+                            f"While resolving '{module_path}': "
+                            f"failed at component '{part}' on {parent.__class__.__name__} "
+                            f"(tried: {', '.join(attribute_aliases[part])}). "
+                            f"Available attributes: {available_attrs}"
+                        )
+                else:
                     raise AttributeError(
                         f"While resolving '{module_path}': "
                         f"failed at component '{part}' on {parent.__class__.__name__}"
-                    ) from e
+                    )
 
         child_name = parts[-1]
-        try:
+        
+        # Try to get the child, with aliases for common names
+        child_aliases = {
+            "gate": ["router", "gate", "gate_proj", "gate_layer", "gating_network", "expert_weights"]  # Common MoE gate/router names
+        }
+        
+        if hasattr(parent, child_name):
             child = getattr(parent, child_name)
-        except AttributeError as e:
-            raise AttributeError(
-                f"While resolving '{module_path}': "
-                f"could not find final attribute '{child_name}' on {parent.__class__.__name__}"
-            ) from e
+        elif child_name in child_aliases:
+            found = False
+            for alias in child_aliases[child_name]:
+                if hasattr(parent, alias):
+                    child = getattr(parent, alias)
+                    child_name = alias  # Update to use the actual name
+                    found = True
+                    break
+            if not found:
+                # Debug: list available attributes
+                all_attrs = dir(parent)
+                available_attrs = []
+                for name in all_attrs:
+                    if name.startswith('_'):
+                        continue
+                    try:
+                        attr = getattr(parent, name)
+                        if isinstance(attr, nn.Module) or not callable(attr):
+                            available_attrs.append(name)
+                    except:
+                        pass
+                
+                logger.error(
+                    f"Available attributes on {parent.__class__.__name__}: {available_attrs}"
+                )
+                raise AttributeError(
+                    f"While resolving '{module_path}': "
+                    f"could not find final attribute '{child_name}' on {parent.__class__.__name__} "
+                    f"(tried: {', '.join(child_aliases[child_name])}). "
+                    f"Available attributes: {available_attrs}"
+                )
+        else:
+            try:
+                child = getattr(parent, child_name)
+            except AttributeError as e:
+                # Debug: list available attributes
+                all_attrs = dir(parent)
+                available_attrs = []
+                for name in all_attrs:
+                    if name.startswith('_'):
+                        continue
+                    try:
+                        attr = getattr(parent, name)
+                        if isinstance(attr, nn.Module) or not callable(attr):
+                            available_attrs.append(name)
+                    except:
+                        pass
+                
+                logger.error(
+                    f"Available attributes on {parent.__class__.__name__}: {available_attrs}"
+                )
+                raise AttributeError(
+                    f"While resolving '{module_path}': "
+                    f"could not find final attribute '{child_name}' on {parent.__class__.__name__}. "
+                    f"Available attributes: {available_attrs}"
+                ) from e
 
         if not isinstance(child, nn.Linear):
             raise TypeError(

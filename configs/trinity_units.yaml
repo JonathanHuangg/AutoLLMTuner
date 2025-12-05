@@ -3,23 +3,14 @@ units:
 - {name: layers.0.self_attn.k_proj}
 - {name: layers.0.self_attn.v_proj}
 - {name: layers.0.self_attn.o_proj}
-- {name: layers.0.block_sparse_moe.gate}
-- {name: layers.0.block_sparse_moe.shared_experts.gate_proj}
-- {name: layers.0.block_sparse_moe.shared_experts.up_proj}
-- {name: layers.0.block_sparse_moe.shared_experts.down_proj}
 - {name: layers.1.self_attn.q_proj}
 - {name: layers.1.self_attn.k_proj}
 - {name: layers.1.self_attn.v_proj}
 - {name: layers.1.self_attn.o_proj}
-- {name: layers.1.block_sparse_moe.gate}
-- {name: layers.1.block_sparse_moe.shared_experts.gate_proj}
-- {name: layers.1.block_sparse_moe.shared_experts.up_proj}
-- {name: layers.1.block_sparse_moe.shared_experts.down_proj}
 - {name: layers.2.self_attn.q_proj}
 - {name: layers.2.self_attn.k_proj}
 - {name: layers.2.self_attn.v_proj}
 - {name: layers.2.self_attn.o_proj}
-- {name: layers.2.block_sparse_moe.gate}
 - {name: layers.2.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.2.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.2.block_sparse_moe.shared_experts.down_proj}
@@ -27,7 +18,6 @@ units:
 - {name: layers.3.self_attn.k_proj}
 - {name: layers.3.self_attn.v_proj}
 - {name: layers.3.self_attn.o_proj}
-- {name: layers.3.block_sparse_moe.gate}
 - {name: layers.3.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.3.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.3.block_sparse_moe.shared_experts.down_proj}
@@ -35,7 +25,6 @@ units:
 - {name: layers.4.self_attn.k_proj}
 - {name: layers.4.self_attn.v_proj}
 - {name: layers.4.self_attn.o_proj}
-- {name: layers.4.block_sparse_moe.gate}
 - {name: layers.4.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.4.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.4.block_sparse_moe.shared_experts.down_proj}
@@ -43,7 +32,6 @@ units:
 - {name: layers.5.self_attn.k_proj}
 - {name: layers.5.self_attn.v_proj}
 - {name: layers.5.self_attn.o_proj}
-- {name: layers.5.block_sparse_moe.gate}
 - {name: layers.5.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.5.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.5.block_sparse_moe.shared_experts.down_proj}
@@ -51,7 +39,6 @@ units:
 - {name: layers.6.self_attn.k_proj}
 - {name: layers.6.self_attn.v_proj}
 - {name: layers.6.self_attn.o_proj}
-- {name: layers.6.block_sparse_moe.gate}
 - {name: layers.6.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.6.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.6.block_sparse_moe.shared_experts.down_proj}
@@ -59,7 +46,6 @@ units:
 - {name: layers.7.self_attn.k_proj}
 - {name: layers.7.self_attn.v_proj}
 - {name: layers.7.self_attn.o_proj}
-- {name: layers.7.block_sparse_moe.gate}
 - {name: layers.7.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.7.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.7.block_sparse_moe.shared_experts.down_proj}
@@ -67,7 +53,6 @@ units:
 - {name: layers.8.self_attn.k_proj}
 - {name: layers.8.self_attn.v_proj}
 - {name: layers.8.self_attn.o_proj}
-- {name: layers.8.block_sparse_moe.gate}
 - {name: layers.8.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.8.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.8.block_sparse_moe.shared_experts.down_proj}
@@ -75,7 +60,6 @@ units:
 - {name: layers.9.self_attn.k_proj}
 - {name: layers.9.self_attn.v_proj}
 - {name: layers.9.self_attn.o_proj}
-- {name: layers.9.block_sparse_moe.gate}
 - {name: layers.9.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.9.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.9.block_sparse_moe.shared_experts.down_proj}
@@ -83,7 +67,6 @@ units:
 - {name: layers.10.self_attn.k_proj}
 - {name: layers.10.self_attn.v_proj}
 - {name: layers.10.self_attn.o_proj}
-- {name: layers.10.block_sparse_moe.gate}
 - {name: layers.10.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.10.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.10.block_sparse_moe.shared_experts.down_proj}
@@ -91,7 +74,6 @@ units:
 - {name: layers.11.self_attn.k_proj}
 - {name: layers.11.self_attn.v_proj}
 - {name: layers.11.self_attn.o_proj}
-- {name: layers.11.block_sparse_moe.gate}
 - {name: layers.11.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.11.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.11.block_sparse_moe.shared_experts.down_proj}
@@ -99,7 +81,6 @@ units:
 - {name: layers.12.self_attn.k_proj}
 - {name: layers.12.self_attn.v_proj}
 - {name: layers.12.self_attn.o_proj}
-- {name: layers.12.block_sparse_moe.gate}
 - {name: layers.12.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.12.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.12.block_sparse_moe.shared_experts.down_proj}
@@ -107,7 +88,6 @@ units:
 - {name: layers.13.self_attn.k_proj}
 - {name: layers.13.self_attn.v_proj}
 - {name: layers.13.self_attn.o_proj}
-- {name: layers.13.block_sparse_moe.gate}
 - {name: layers.13.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.13.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.13.block_sparse_moe.shared_experts.down_proj}
@@ -115,7 +95,6 @@ units:
 - {name: layers.14.self_attn.k_proj}
 - {name: layers.14.self_attn.v_proj}
 - {name: layers.14.self_attn.o_proj}
-- {name: layers.14.block_sparse_moe.gate}
 - {name: layers.14.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.14.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.14.block_sparse_moe.shared_experts.down_proj}
@@ -123,7 +102,6 @@ units:
 - {name: layers.15.self_attn.k_proj}
 - {name: layers.15.self_attn.v_proj}
 - {name: layers.15.self_attn.o_proj}
-- {name: layers.15.block_sparse_moe.gate}
 - {name: layers.15.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.15.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.15.block_sparse_moe.shared_experts.down_proj}
@@ -131,7 +109,6 @@ units:
 - {name: layers.16.self_attn.k_proj}
 - {name: layers.16.self_attn.v_proj}
 - {name: layers.16.self_attn.o_proj}
-- {name: layers.16.block_sparse_moe.gate}
 - {name: layers.16.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.16.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.16.block_sparse_moe.shared_experts.down_proj}
@@ -139,7 +116,6 @@ units:
 - {name: layers.17.self_attn.k_proj}
 - {name: layers.17.self_attn.v_proj}
 - {name: layers.17.self_attn.o_proj}
-- {name: layers.17.block_sparse_moe.gate}
 - {name: layers.17.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.17.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.17.block_sparse_moe.shared_experts.down_proj}
@@ -147,7 +123,6 @@ units:
 - {name: layers.18.self_attn.k_proj}
 - {name: layers.18.self_attn.v_proj}
 - {name: layers.18.self_attn.o_proj}
-- {name: layers.18.block_sparse_moe.gate}
 - {name: layers.18.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.18.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.18.block_sparse_moe.shared_experts.down_proj}
@@ -155,7 +130,6 @@ units:
 - {name: layers.19.self_attn.k_proj}
 - {name: layers.19.self_attn.v_proj}
 - {name: layers.19.self_attn.o_proj}
-- {name: layers.19.block_sparse_moe.gate}
 - {name: layers.19.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.19.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.19.block_sparse_moe.shared_experts.down_proj}
@@ -163,7 +137,6 @@ units:
 - {name: layers.20.self_attn.k_proj}
 - {name: layers.20.self_attn.v_proj}
 - {name: layers.20.self_attn.o_proj}
-- {name: layers.20.block_sparse_moe.gate}
 - {name: layers.20.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.20.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.20.block_sparse_moe.shared_experts.down_proj}
@@ -171,7 +144,6 @@ units:
 - {name: layers.21.self_attn.k_proj}
 - {name: layers.21.self_attn.v_proj}
 - {name: layers.21.self_attn.o_proj}
-- {name: layers.21.block_sparse_moe.gate}
 - {name: layers.21.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.21.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.21.block_sparse_moe.shared_experts.down_proj}
@@ -179,7 +151,6 @@ units:
 - {name: layers.22.self_attn.k_proj}
 - {name: layers.22.self_attn.v_proj}
 - {name: layers.22.self_attn.o_proj}
-- {name: layers.22.block_sparse_moe.gate}
 - {name: layers.22.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.22.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.22.block_sparse_moe.shared_experts.down_proj}
@@ -187,7 +158,6 @@ units:
 - {name: layers.23.self_attn.k_proj}
 - {name: layers.23.self_attn.v_proj}
 - {name: layers.23.self_attn.o_proj}
-- {name: layers.23.block_sparse_moe.gate}
 - {name: layers.23.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.23.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.23.block_sparse_moe.shared_experts.down_proj}
@@ -195,7 +165,6 @@ units:
 - {name: layers.24.self_attn.k_proj}
 - {name: layers.24.self_attn.v_proj}
 - {name: layers.24.self_attn.o_proj}
-- {name: layers.24.block_sparse_moe.gate}
 - {name: layers.24.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.24.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.24.block_sparse_moe.shared_experts.down_proj}
@@ -203,7 +172,6 @@ units:
 - {name: layers.25.self_attn.k_proj}
 - {name: layers.25.self_attn.v_proj}
 - {name: layers.25.self_attn.o_proj}
-- {name: layers.25.block_sparse_moe.gate}
 - {name: layers.25.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.25.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.25.block_sparse_moe.shared_experts.down_proj}
@@ -211,7 +179,6 @@ units:
 - {name: layers.26.self_attn.k_proj}
 - {name: layers.26.self_attn.v_proj}
 - {name: layers.26.self_attn.o_proj}
-- {name: layers.26.block_sparse_moe.gate}
 - {name: layers.26.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.26.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.26.block_sparse_moe.shared_experts.down_proj}
@@ -219,7 +186,6 @@ units:
 - {name: layers.27.self_attn.k_proj}
 - {name: layers.27.self_attn.v_proj}
 - {name: layers.27.self_attn.o_proj}
-- {name: layers.27.block_sparse_moe.gate}
 - {name: layers.27.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.27.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.27.block_sparse_moe.shared_experts.down_proj}
@@ -227,7 +193,6 @@ units:
 - {name: layers.28.self_attn.k_proj}
 - {name: layers.28.self_attn.v_proj}
 - {name: layers.28.self_attn.o_proj}
-- {name: layers.28.block_sparse_moe.gate}
 - {name: layers.28.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.28.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.28.block_sparse_moe.shared_experts.down_proj}
@@ -235,7 +200,6 @@ units:
 - {name: layers.29.self_attn.k_proj}
 - {name: layers.29.self_attn.v_proj}
 - {name: layers.29.self_attn.o_proj}
-- {name: layers.29.block_sparse_moe.gate}
 - {name: layers.29.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.29.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.29.block_sparse_moe.shared_experts.down_proj}
@@ -243,7 +207,6 @@ units:
 - {name: layers.30.self_attn.k_proj}
 - {name: layers.30.self_attn.v_proj}
 - {name: layers.30.self_attn.o_proj}
-- {name: layers.30.block_sparse_moe.gate}
 - {name: layers.30.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.30.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.30.block_sparse_moe.shared_experts.down_proj}
@@ -251,7 +214,6 @@ units:
 - {name: layers.31.self_attn.k_proj}
 - {name: layers.31.self_attn.v_proj}
 - {name: layers.31.self_attn.o_proj}
-- {name: layers.31.block_sparse_moe.gate}
 - {name: layers.31.block_sparse_moe.shared_experts.gate_proj}
 - {name: layers.31.block_sparse_moe.shared_experts.up_proj}
 - {name: layers.31.block_sparse_moe.shared_experts.down_proj}

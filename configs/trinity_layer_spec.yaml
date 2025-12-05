@@ -1,1535 +1,1535 @@
 units:
-  model.layers.0.self_attn.q_proj:
+  layers.0.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.0.self_attn.k_proj:
+  layers.0.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.0.self_attn.v_proj:
+  layers.0.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.0.self_attn.o_proj:
+  layers.0.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.0.block_sparse_moe.gate:
+  layers.0.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.0.block_sparse_moe.shared_experts.gate_proj:
+  layers.0.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.0.block_sparse_moe.shared_experts.up_proj:
+  layers.0.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.0.block_sparse_moe.shared_experts.down_proj:
+  layers.0.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.1.self_attn.q_proj:
+  layers.1.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.1.self_attn.k_proj:
+  layers.1.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.1.self_attn.v_proj:
+  layers.1.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.1.self_attn.o_proj:
+  layers.1.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.1.block_sparse_moe.gate:
+  layers.1.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.1.block_sparse_moe.shared_experts.gate_proj:
+  layers.1.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.1.block_sparse_moe.shared_experts.up_proj:
+  layers.1.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.1.block_sparse_moe.shared_experts.down_proj:
+  layers.1.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.2.self_attn.q_proj:
+  layers.2.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.2.self_attn.k_proj:
+  layers.2.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.2.self_attn.v_proj:
+  layers.2.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.2.self_attn.o_proj:
+  layers.2.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.2.block_sparse_moe.gate:
+  layers.2.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.2.block_sparse_moe.shared_experts.gate_proj:
+  layers.2.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.2.block_sparse_moe.shared_experts.up_proj:
+  layers.2.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.2.block_sparse_moe.shared_experts.down_proj:
+  layers.2.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.3.self_attn.q_proj:
+  layers.3.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.3.self_attn.k_proj:
+  layers.3.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.3.self_attn.v_proj:
+  layers.3.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.3.self_attn.o_proj:
+  layers.3.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.3.block_sparse_moe.gate:
+  layers.3.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.3.block_sparse_moe.shared_experts.gate_proj:
+  layers.3.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.3.block_sparse_moe.shared_experts.up_proj:
+  layers.3.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.3.block_sparse_moe.shared_experts.down_proj:
+  layers.3.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.4.self_attn.q_proj:
+  layers.4.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.4.self_attn.k_proj:
+  layers.4.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.4.self_attn.v_proj:
+  layers.4.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.4.self_attn.o_proj:
+  layers.4.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.4.block_sparse_moe.gate:
+  layers.4.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.4.block_sparse_moe.shared_experts.gate_proj:
+  layers.4.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.4.block_sparse_moe.shared_experts.up_proj:
+  layers.4.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.4.block_sparse_moe.shared_experts.down_proj:
+  layers.4.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.5.self_attn.q_proj:
+  layers.5.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.5.self_attn.k_proj:
+  layers.5.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.5.self_attn.v_proj:
+  layers.5.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.5.self_attn.o_proj:
+  layers.5.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.5.block_sparse_moe.gate:
+  layers.5.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.5.block_sparse_moe.shared_experts.gate_proj:
+  layers.5.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.5.block_sparse_moe.shared_experts.up_proj:
+  layers.5.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.5.block_sparse_moe.shared_experts.down_proj:
+  layers.5.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.6.self_attn.q_proj:
+  layers.6.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.6.self_attn.k_proj:
+  layers.6.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.6.self_attn.v_proj:
+  layers.6.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.6.self_attn.o_proj:
+  layers.6.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.6.block_sparse_moe.gate:
+  layers.6.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.6.block_sparse_moe.shared_experts.gate_proj:
+  layers.6.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.6.block_sparse_moe.shared_experts.up_proj:
+  layers.6.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.6.block_sparse_moe.shared_experts.down_proj:
+  layers.6.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.7.self_attn.q_proj:
+  layers.7.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.7.self_attn.k_proj:
+  layers.7.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.7.self_attn.v_proj:
+  layers.7.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.7.self_attn.o_proj:
+  layers.7.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.7.block_sparse_moe.gate:
+  layers.7.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.7.block_sparse_moe.shared_experts.gate_proj:
+  layers.7.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.7.block_sparse_moe.shared_experts.up_proj:
+  layers.7.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.7.block_sparse_moe.shared_experts.down_proj:
+  layers.7.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.8.self_attn.q_proj:
+  layers.8.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.8.self_attn.k_proj:
+  layers.8.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.8.self_attn.v_proj:
+  layers.8.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.8.self_attn.o_proj:
+  layers.8.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.8.block_sparse_moe.gate:
+  layers.8.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.8.block_sparse_moe.shared_experts.gate_proj:
+  layers.8.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.8.block_sparse_moe.shared_experts.up_proj:
+  layers.8.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.8.block_sparse_moe.shared_experts.down_proj:
+  layers.8.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.9.self_attn.q_proj:
+  layers.9.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.9.self_attn.k_proj:
+  layers.9.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.9.self_attn.v_proj:
+  layers.9.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.9.self_attn.o_proj:
+  layers.9.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.9.block_sparse_moe.gate:
+  layers.9.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.9.block_sparse_moe.shared_experts.gate_proj:
+  layers.9.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.9.block_sparse_moe.shared_experts.up_proj:
+  layers.9.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.9.block_sparse_moe.shared_experts.down_proj:
+  layers.9.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.10.self_attn.q_proj:
+  layers.10.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.10.self_attn.k_proj:
+  layers.10.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.10.self_attn.v_proj:
+  layers.10.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.10.self_attn.o_proj:
+  layers.10.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.10.block_sparse_moe.gate:
+  layers.10.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.10.block_sparse_moe.shared_experts.gate_proj:
+  layers.10.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.10.block_sparse_moe.shared_experts.up_proj:
+  layers.10.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.10.block_sparse_moe.shared_experts.down_proj:
+  layers.10.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.11.self_attn.q_proj:
+  layers.11.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.11.self_attn.k_proj:
+  layers.11.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.11.self_attn.v_proj:
+  layers.11.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.11.self_attn.o_proj:
+  layers.11.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.11.block_sparse_moe.gate:
+  layers.11.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.11.block_sparse_moe.shared_experts.gate_proj:
+  layers.11.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.11.block_sparse_moe.shared_experts.up_proj:
+  layers.11.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.11.block_sparse_moe.shared_experts.down_proj:
+  layers.11.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.12.self_attn.q_proj:
+  layers.12.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.12.self_attn.k_proj:
+  layers.12.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.12.self_attn.v_proj:
+  layers.12.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.12.self_attn.o_proj:
+  layers.12.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.12.block_sparse_moe.gate:
+  layers.12.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.12.block_sparse_moe.shared_experts.gate_proj:
+  layers.12.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.12.block_sparse_moe.shared_experts.up_proj:
+  layers.12.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.12.block_sparse_moe.shared_experts.down_proj:
+  layers.12.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.13.self_attn.q_proj:
+  layers.13.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.13.self_attn.k_proj:
+  layers.13.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.13.self_attn.v_proj:
+  layers.13.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.13.self_attn.o_proj:
+  layers.13.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.13.block_sparse_moe.gate:
+  layers.13.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.13.block_sparse_moe.shared_experts.gate_proj:
+  layers.13.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.13.block_sparse_moe.shared_experts.up_proj:
+  layers.13.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.13.block_sparse_moe.shared_experts.down_proj:
+  layers.13.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.14.self_attn.q_proj:
+  layers.14.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.14.self_attn.k_proj:
+  layers.14.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.14.self_attn.v_proj:
+  layers.14.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.14.self_attn.o_proj:
+  layers.14.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.14.block_sparse_moe.gate:
+  layers.14.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.14.block_sparse_moe.shared_experts.gate_proj:
+  layers.14.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.14.block_sparse_moe.shared_experts.up_proj:
+  layers.14.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.14.block_sparse_moe.shared_experts.down_proj:
+  layers.14.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.15.self_attn.q_proj:
+  layers.15.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.15.self_attn.k_proj:
+  layers.15.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.15.self_attn.v_proj:
+  layers.15.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.15.self_attn.o_proj:
+  layers.15.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.15.block_sparse_moe.gate:
+  layers.15.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.15.block_sparse_moe.shared_experts.gate_proj:
+  layers.15.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.15.block_sparse_moe.shared_experts.up_proj:
+  layers.15.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.15.block_sparse_moe.shared_experts.down_proj:
+  layers.15.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.16.self_attn.q_proj:
+  layers.16.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.16.self_attn.k_proj:
+  layers.16.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.16.self_attn.v_proj:
+  layers.16.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.16.self_attn.o_proj:
+  layers.16.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.16.block_sparse_moe.gate:
+  layers.16.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.16.block_sparse_moe.shared_experts.gate_proj:
+  layers.16.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.16.block_sparse_moe.shared_experts.up_proj:
+  layers.16.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.16.block_sparse_moe.shared_experts.down_proj:
+  layers.16.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.17.self_attn.q_proj:
+  layers.17.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.17.self_attn.k_proj:
+  layers.17.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.17.self_attn.v_proj:
+  layers.17.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.17.self_attn.o_proj:
+  layers.17.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.17.block_sparse_moe.gate:
+  layers.17.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.17.block_sparse_moe.shared_experts.gate_proj:
+  layers.17.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.17.block_sparse_moe.shared_experts.up_proj:
+  layers.17.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.17.block_sparse_moe.shared_experts.down_proj:
+  layers.17.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.18.self_attn.q_proj:
+  layers.18.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.18.self_attn.k_proj:
+  layers.18.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.18.self_attn.v_proj:
+  layers.18.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.18.self_attn.o_proj:
+  layers.18.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.18.block_sparse_moe.gate:
+  layers.18.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.18.block_sparse_moe.shared_experts.gate_proj:
+  layers.18.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.18.block_sparse_moe.shared_experts.up_proj:
+  layers.18.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.18.block_sparse_moe.shared_experts.down_proj:
+  layers.18.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.19.self_attn.q_proj:
+  layers.19.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.19.self_attn.k_proj:
+  layers.19.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.19.self_attn.v_proj:
+  layers.19.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.19.self_attn.o_proj:
+  layers.19.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.19.block_sparse_moe.gate:
+  layers.19.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.19.block_sparse_moe.shared_experts.gate_proj:
+  layers.19.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.19.block_sparse_moe.shared_experts.up_proj:
+  layers.19.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.19.block_sparse_moe.shared_experts.down_proj:
+  layers.19.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.20.self_attn.q_proj:
+  layers.20.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.20.self_attn.k_proj:
+  layers.20.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.20.self_attn.v_proj:
+  layers.20.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.20.self_attn.o_proj:
+  layers.20.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.20.block_sparse_moe.gate:
+  layers.20.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.20.block_sparse_moe.shared_experts.gate_proj:
+  layers.20.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.20.block_sparse_moe.shared_experts.up_proj:
+  layers.20.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.20.block_sparse_moe.shared_experts.down_proj:
+  layers.20.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.21.self_attn.q_proj:
+  layers.21.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.21.self_attn.k_proj:
+  layers.21.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.21.self_attn.v_proj:
+  layers.21.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.21.self_attn.o_proj:
+  layers.21.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.21.block_sparse_moe.gate:
+  layers.21.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.21.block_sparse_moe.shared_experts.gate_proj:
+  layers.21.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.21.block_sparse_moe.shared_experts.up_proj:
+  layers.21.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.21.block_sparse_moe.shared_experts.down_proj:
+  layers.21.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.22.self_attn.q_proj:
+  layers.22.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.22.self_attn.k_proj:
+  layers.22.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.22.self_attn.v_proj:
+  layers.22.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.22.self_attn.o_proj:
+  layers.22.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.22.block_sparse_moe.gate:
+  layers.22.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.22.block_sparse_moe.shared_experts.gate_proj:
+  layers.22.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.22.block_sparse_moe.shared_experts.up_proj:
+  layers.22.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.22.block_sparse_moe.shared_experts.down_proj:
+  layers.22.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.23.self_attn.q_proj:
+  layers.23.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.23.self_attn.k_proj:
+  layers.23.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.23.self_attn.v_proj:
+  layers.23.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.23.self_attn.o_proj:
+  layers.23.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.23.block_sparse_moe.gate:
+  layers.23.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.23.block_sparse_moe.shared_experts.gate_proj:
+  layers.23.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.23.block_sparse_moe.shared_experts.up_proj:
+  layers.23.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.23.block_sparse_moe.shared_experts.down_proj:
+  layers.23.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.24.self_attn.q_proj:
+  layers.24.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.24.self_attn.k_proj:
+  layers.24.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.24.self_attn.v_proj:
+  layers.24.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.24.self_attn.o_proj:
+  layers.24.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.24.block_sparse_moe.gate:
+  layers.24.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.24.block_sparse_moe.shared_experts.gate_proj:
+  layers.24.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.24.block_sparse_moe.shared_experts.up_proj:
+  layers.24.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.24.block_sparse_moe.shared_experts.down_proj:
+  layers.24.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.25.self_attn.q_proj:
+  layers.25.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.25.self_attn.k_proj:
+  layers.25.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.25.self_attn.v_proj:
+  layers.25.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.25.self_attn.o_proj:
+  layers.25.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.25.block_sparse_moe.gate:
+  layers.25.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.25.block_sparse_moe.shared_experts.gate_proj:
+  layers.25.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.25.block_sparse_moe.shared_experts.up_proj:
+  layers.25.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.25.block_sparse_moe.shared_experts.down_proj:
+  layers.25.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.26.self_attn.q_proj:
+  layers.26.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.26.self_attn.k_proj:
+  layers.26.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.26.self_attn.v_proj:
+  layers.26.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.26.self_attn.o_proj:
+  layers.26.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.26.block_sparse_moe.gate:
+  layers.26.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.26.block_sparse_moe.shared_experts.gate_proj:
+  layers.26.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.26.block_sparse_moe.shared_experts.up_proj:
+  layers.26.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.26.block_sparse_moe.shared_experts.down_proj:
+  layers.26.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.27.self_attn.q_proj:
+  layers.27.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.27.self_attn.k_proj:
+  layers.27.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.27.self_attn.v_proj:
+  layers.27.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.27.self_attn.o_proj:
+  layers.27.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.27.block_sparse_moe.gate:
+  layers.27.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.27.block_sparse_moe.shared_experts.gate_proj:
+  layers.27.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.27.block_sparse_moe.shared_experts.up_proj:
+  layers.27.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.27.block_sparse_moe.shared_experts.down_proj:
+  layers.27.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.28.self_attn.q_proj:
+  layers.28.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.28.self_attn.k_proj:
+  layers.28.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.28.self_attn.v_proj:
+  layers.28.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.28.self_attn.o_proj:
+  layers.28.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.28.block_sparse_moe.gate:
+  layers.28.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.28.block_sparse_moe.shared_experts.gate_proj:
+  layers.28.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.28.block_sparse_moe.shared_experts.up_proj:
+  layers.28.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.28.block_sparse_moe.shared_experts.down_proj:
+  layers.28.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.29.self_attn.q_proj:
+  layers.29.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.29.self_attn.k_proj:
+  layers.29.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.29.self_attn.v_proj:
+  layers.29.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.29.self_attn.o_proj:
+  layers.29.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.29.block_sparse_moe.gate:
+  layers.29.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.29.block_sparse_moe.shared_experts.gate_proj:
+  layers.29.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.29.block_sparse_moe.shared_experts.up_proj:
+  layers.29.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.29.block_sparse_moe.shared_experts.down_proj:
+  layers.29.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.30.self_attn.q_proj:
+  layers.30.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.30.self_attn.k_proj:
+  layers.30.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.30.self_attn.v_proj:
+  layers.30.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.30.self_attn.o_proj:
+  layers.30.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.30.block_sparse_moe.gate:
+  layers.30.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.30.block_sparse_moe.shared_experts.gate_proj:
+  layers.30.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.30.block_sparse_moe.shared_experts.up_proj:
+  layers.30.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.30.block_sparse_moe.shared_experts.down_proj:
+  layers.30.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 6144
-  model.layers.31.self_attn.q_proj:
+  layers.31.self_attn.q_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.31.self_attn.k_proj:
+  layers.31.self_attn.k_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.31.self_attn.v_proj:
+  layers.31.self_attn.v_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.31.self_attn.o_proj:
+  layers.31.self_attn.o_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 2048
       k: 2048
-  model.layers.31.block_sparse_moe.gate:
+  layers.31.block_sparse_moe.gate:
     ops:
     - op_type: matmul
       m: 128
       n: 128
       k: 2048
-  model.layers.31.block_sparse_moe.shared_experts.gate_proj:
+  layers.31.block_sparse_moe.shared_experts.gate_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.31.block_sparse_moe.shared_experts.up_proj:
+  layers.31.block_sparse_moe.shared_experts.up_proj:
     ops:
     - op_type: matmul
       m: 128
       n: 6144
       k: 2048
-  model.layers.31.block_sparse_moe.shared_experts.down_proj:
+  layers.31.block_sparse_moe.shared_experts.down_proj:
     ops:
     - op_type: matmul
       m: 128

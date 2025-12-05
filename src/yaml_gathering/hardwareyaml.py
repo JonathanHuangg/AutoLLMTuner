@@ -7,7 +7,7 @@ import yaml
 from transformers import AutoConfig
 
 
-MODEL_NAME = "Qwen/Qwen2.5-7B-Instruct"
+MODEL_NAME = "arcee-ai/Trinity-Mini"
 
 # How many timing iterations
 WARMUP_ITERS = 10
@@ -24,7 +24,7 @@ CONFIGS_DIR = PROJECT_ROOT / "configs"
 
 def collect_linear_shapes(seq_len: int = 128, batch_size: int = 1):
     """
-    Collect representative (m, n, k) shapes for Qwen2.5-7B *without*
+    Collect representative (m, n, k) shapes for Trinity-Mini *without*
     loading model weights.
 
     We interpret a Linear as:  (m, k) @ (k, n) -> (m, n)
@@ -97,11 +97,56 @@ def bench_matmul(m: int, n: int, k: int, dtype=torch.float16) -> float:
 
 def main():
     if not torch.cuda.is_available():
-        raise RuntimeError(
-            "CUDA is not available. Run this on a GPU node (srun/salloc ... --gres=gpu:1)."
+        print(
+            "CUDA is not available; skipping hardware.yaml regeneration. "
+            "Using existing configs/hardware.yaml if present."
         )
+        return
 
     print("Using CUDA device:", torch.cuda.get_device_name(0))
+    print(f"Project root: {PROJECT_ROOT}")
+    print(f"Configs dir:  {CONFIGS_DIR}")
+
+    # 1) Get representative (m, n, k) shapes from Qwen2.5 config
+    shapes = collect_linear_shapes(seq_len=128, batch_size=1)
+
+    # 2) Benchmark each shape once in fp16 and reuse for each bitwidth
+    latency_lut_entries = []
+
+    for (m, n, k) in shapes:
+        print(f"\nBenchmarking matmul with (m={m}, n={n}, k={k}) ...")
+        base_us = bench_matmul(m, n, k, dtype=torch.float16)
+        print(f"  avg latency (fp16) ≈ {base_us:.2f} µs")
+
+        # For now, store the same measured latency for all bitwidths.
+        for bitw in BITWIDTHS:
+            latency_lut_entries.append(
+                {
+                    "m": m,
+                    "n": n,
+                    "k": k,
+                    "bitwidth": bitw,
+                    "latency_us": base_us,
+                }
+            )
+
+    hardware = {
+        "model_name": MODEL_NAME,
+        "latency_lut": latency_lut_entries,
+        "meta": {
+            "warmup_iters": WARMUP_ITERS,
+            "bench_iters": BENCH_ITERS,
+        },
+    }
+
+    out_path = CONFIGS_DIR / "hardware.yaml"
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with out_path.open("w") as f:
+        yaml.safe_dump(hardware, f, sort_keys=False)
+
+    print(f"\nWrote {out_path} with {len(latency_lut_entries)} LUT entries.")
+    print("Done.")
     print(f"Project root: {PROJECT_ROOT}")
     print(f"Configs dir:  {CONFIGS_DIR}")
 

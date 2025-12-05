@@ -1,0 +1,35 @@
+run_id: mistrala-evoq-v001
+
+io:
+  out_dir: ../runs
+
+model:
+  name: mistralai/Mistral-7B-Instruct-v0.1
+
+  param_counts_file: ../configs/mistral_param_counts.json
+
+  default_fp_bits: 16
+
+units:
+  spec_file: ../configs/mistral_units.yaml
+
+  layer_spec_file: ../configs/mistral_layer_spec.yaml
+
+hardware:
+  lut_file: ../configs/hardware.yaml
+
+run:
+  seed: 67
+  population_size: 16
+  generations: 10
+  mutation_rate: 0.03
+  crossover_probability: 0.8
+  elitism_frac: 0.1
+
+evaluation:
+
+  val_tokens_schedule: [512, 2048]
+
+  measure_latency: real
+
+  save_checkpoints: all

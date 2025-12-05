@@ -54,9 +54,18 @@ def plot_bit_allocation_heatmap(
         print("[WARN] After length filtering, no rows remain for heatmap.")
         return
 
-    bit_matrix = np.stack(filtered_bits.to_numpy())  # [N_ind, N_layers]
+    # Filter: keep only lists of correct length
+    clean_bits = [
+        b for b in filtered_bits.to_numpy()
+        if isinstance(b, (list, np.ndarray)) and len(b) == target_length
+    ]
 
+    if len(clean_bits) == 0:
+        raise ValueError("No valid bit vectors of expected length found.")
+
+    bit_matrix = np.stack(clean_bits)
     n_ind, n_layers = bit_matrix.shape
+
     print(f"[INFO] Heatmap using {n_ind} individuals × {n_layers} layers")
 
     # --- 2. Optional downsampling along individuals (rows) ---

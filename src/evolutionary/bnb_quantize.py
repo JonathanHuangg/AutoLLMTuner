@@ -9,6 +9,7 @@ import polars as pl
 from .data_models import ParamLayout
 import logging
 from tqdm import tqdm
+from datasets import load_dataset
 
 logger = logging.getLogger(__name__)
 # MODEL_NAME = "arcee-ai/Trinity-Mini"
@@ -67,17 +68,15 @@ class BnbQuantizeBackend:
         self.model.eval()
 
         # Load MATH-500 from HF (or point this to a local path if you prefer)
-        logger.info("BnbQuantizeBackend: caching FP16 weights for quantizable units...")
+        logger.info("BnbQuantizeBackend: loading MATH-500 dataset...")
 
-        self.math_df = pl.read_ndjson(
-            "hf://datasets/HuggingFaceH4/MATH-500/test.jsonl"
-        )
-        self.math_rows: List[Dict[str, str]] = (
-            self.math_df.head(50).to_dicts()
-        )
-        logger.info(
-            f"BnbQuantizeBackend: loaded MATH-500 with {len(self.math_rows)} rows."
-        )
+    ds = load_dataset("HuggingFaceH4/MATH-500", split="test")
+
+    # Keep only the first 50 problems to save generation time
+    self.math_rows = ds.select(range(50))
+
+    logger.info(f"BnbQuantizeBackend: loaded {len(self.math_rows)} MATH problems.")
+
 
     def _resolve_linear(
         self, model: nn.Module, module_path: str

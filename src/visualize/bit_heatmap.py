@@ -57,7 +57,7 @@ def plot_bit_allocation_heatmap(
     # Filter: keep only lists of correct length
     clean_bits = [
         b for b in filtered_bits.to_numpy()
-        if isinstance(b, (list, np.ndarray)) and len(b) == target_length
+        if isinstance(b, (list, np.ndarray)) and len(b) == target_len
     ]
 
     if len(clean_bits) == 0:

@@ -2,7 +2,7 @@
 #SBATCH --job-name=quant_mistral               # Job name  
 #SBATCH -N 1 --ntasks-per-node=1          # Number of nodes and cores per node required 
 #SBATCH --gres=gpu:2                                                   # Number of nodes and cores per node
-#SBATCH -C 'gpu-h200'                                          # Set constraint on the type of gpu node
+#SBATCH -C 'gpu-a100'                                          # Set constraint on the type of gpu node
 #SBATCH --mem-per-gpu=224GB              # Memory per CPU core, 8 CPUs/GPU 
 #SBATCH -t 8:00:00                        # Duration of the job (Ex: 1 hour) 
 #SBATCH -o outputs/Mistral-%j.out

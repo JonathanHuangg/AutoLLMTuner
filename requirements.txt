@@ -1,16 +1,16 @@
+# Full install for GPU machines (real model evaluation).
+# Base-only install (`pip install -e .`) covers the search loop, the tests,
+# and the visualization tools; add the GPU extras for model evaluation:
+#   pip install -e .[gpu]
 PyYAML>=6.0.1
-numpy>=1.26
+numpy>=1.26,<2
 pandas>=2.2
 matplotlib>=3.8
 tqdm>=4.66
-sqlalchemy>=2.0
-scipy>=1.11
-bitsandbytes
-tabulate>=0.9
 seaborn>=0.13
-toml>=0.10
-torch >= 2.9
-torchvision >= 0.24
-transformers >= 4.43.3
+torch>=2.9
+transformers>=4.43.3
+bitsandbytes
+datasets
 polars
 accelerate

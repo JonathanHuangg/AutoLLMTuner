@@ -1,7 +1,19 @@
+# run outputs (regenerable; the curated published results live in results/)
+runs/
+logs/
 outputs/
+
+# model / checkpoint artifacts
 *.parquet
 *.ckpt
 *.bin
 *.pt
-w
-__pycache__
+
+# python
+__pycache__/
+*.egg-info/
+build/
+dist/
+.venv/
+.pytest_cache/
+.coverage

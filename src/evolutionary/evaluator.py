@@ -1,33 +1,60 @@
 from __future__ import annotations
-from typing import List, Tuple
-from .data_models import Individual, EvaluatedIndividual, ParamLayout
-from .cache import MetricsCache
-from .objectives import memory_bytes, latency_ms_lut, combine_into_fitness
-from .lut import LatencyLUT
-from .config import latency_config
-from .bnb_quantize import BnbQuantizeBackend
+import hashlib
 import logging
-import time
-import torch
 import multiprocessing as mp
 import multiprocessing.queues as mp_queues
 import time
+from typing import List, Tuple
+
+from .cache import MetricsCache
+from .config import LatencyConfig
+from .data_models import EvaluatedIndividual, Individual, ParamLayout
+from .lut import LatencyLUT
+from .objectives import combine_into_fitness, latency_ms_lut, memory_bytes
 
 """
 Main wrapper for evaluating individuals:
 - memory_bytes from param_counts + bits
 - latency from LUT (or 0 if disabled)
 - validation loss from backend (BnB quantized model on MATH-500, or mock fallback)
+
+The GPU backend (torch / bitsandbytes / transformers) is imported lazily,
+only when a real model evaluation is requested, so the search loop, the
+tests, and the visualization tools work on machines without a GPU.
 """
 
+logger = logging.getLogger(__name__)
+
+
 def get_devices():
-    """Get available CUDA devices, or CPU if CUDA is not available"""
+    """Get available CUDA devices, or CPU if CUDA is not available."""
+    import torch
+
     if torch.cuda.is_available():
         return [torch.device("cuda", i) for i in range(torch.cuda.device_count())]
     else:
         return [torch.device("cpu")]
 
-logger = logging.getLogger(__name__)
+
+def surrogate_mock_loss(bits: Tuple[int, ...]) -> float:
+    """
+    Deterministic synthetic stand-in for the real MATH-500 loss, used only
+    when the evaluator runs with mock_backend=True (CPU smoke tests).
+
+    It rewards keeping more bits (lower loss at higher precision) with a
+    small deterministic per-genome jitter, so the search still faces a
+    genuine three-way tradeoff between loss, memory, and latency. The
+    numbers it produces are not model results and must never be reported
+    as such.
+    """
+    n = len(bits)
+    frac4 = sum(1 for b in bits if b <= 4) / n
+    frac8 = sum(1 for b in bits if b == 8) / n
+    base = 0.35 + 0.55 * frac4 + 0.25 * frac8
+    jitter = (int(hashlib.sha1(bytes(bits)).hexdigest()[:8], 16) % 1000) / 1000.0 * 0.02
+    return base + jitter
+
+
 class Evaluator:
     def __init__(
         self,
@@ -35,17 +62,25 @@ class Evaluator:
         layout: ParamLayout,
         lut: LatencyLUT,
         default_fp_bits: int,
-        measure_latency: latency_config,
+        measure_latency: LatencyConfig,
+        mock_backend: bool = False,
     ):
         self.layout = layout
         self.lut = lut
         self.default_fp_bits = default_fp_bits
         self.measure_latency = measure_latency
+        self.mock_backend = mock_backend
 
-        self.quant_backend: BnbQuantizeBackend | None = None
+        self.quant_backend = None
         self._backend_error: Exception | None = None
 
+        if mock_backend:
+            logger.info("Mock backend enabled; skipping model load.")
+            return
+
         try:
+            from .bnb_quantize import BnbQuantizeBackend
+
             logger.info("Initializing BnbQuantizeBackend...")
             self.quant_backend = BnbQuantizeBackend(model_name, layout)
             logger.info("BnbQuantizeBackend initialized successfully.")
@@ -55,7 +90,6 @@ class Evaluator:
             )
             self.quant_backend = None
             self._backend_error = e
-
 
     def _bytes_total(self, bits: Tuple[int, ...]) -> int:
         return memory_bytes(self.layout.param_counts, bits, overhead=0)
@@ -71,11 +105,11 @@ class Evaluator:
             for op in self.layout.unit_ops[unit_name]:
                 op_list.append((op.op_type, op.m, op.n, op.k, bit))
 
-        if self.measure_latency == latency_config.LOOKUP:
+        if self.measure_latency == LatencyConfig.LOOKUP:
             # Pure LUT path; no updates
             return latency_ms_lut(self.lut, op_list, bytes_total)
 
-        if self.measure_latency == latency_config.REAL:
+        if self.measure_latency == LatencyConfig.REAL:
             total_us = 0.0
             for op_type, m, n, k, bitw in op_list:
                 us = self.lut.lookup(op_type, m, n, k, bitw)
@@ -92,17 +126,20 @@ class Evaluator:
 
         return 0.0
 
-    def backend_eval(self, bits: Tuple[int, ...], val_tokens: int, device: torch.device) -> float:
+    def backend_eval(self, bits: Tuple[int, ...], val_tokens: int, device=None) -> float:
         """
         Delegate to the quantization backend if available; otherwise use a mock loss.
         """
+        if self.mock_backend:
+            return surrogate_mock_loss(bits)
+
         if self.quant_backend is None:
             logger.warning(
                 f"Quantization backend not available (error: {self._backend_error}); using mock loss."
             )
             # Return a mock loss value (e.g., 2.0) when backend is unavailable
             return 2.0
-        
+
         logger.debug(
             f"backend_eval(real): val_tokens={val_tokens}, calling BnbQuantizeBackend.eval_bits..."
         )
@@ -114,7 +151,7 @@ class Evaluator:
         ind: Individual,
         cache: MetricsCache,
         val_tokens: int,
-        device: torch.device,
+        device=None,
     ) -> EvaluatedIndividual:
         cached_individual = cache.get(ind.id)
         if cached_individual:
@@ -131,11 +168,11 @@ class Evaluator:
         cache.put(ind.id, ind.bits, fit)
         return EvaluatedIndividual(ind, fit, aux={"cached": False})
 
-    def _evaluate_many_worker(self, pop_queue: mp.Queue, res_queue: mp.Queue, device: torch.device, val_tokens: int):
+    def _evaluate_many_worker(self, pop_queue: mp.Queue, res_queue: mp.Queue, device, val_tokens: int):
         """Worker function that evaluates individuals from the queue"""
         # Re-initialize logger in worker process
         worker_logger = logging.getLogger(__name__)
-        
+
         while True:
             try:
                 idx, ind = pop_queue.get(timeout=1.0)  # Use timeout to allow checking if queue is done
@@ -147,7 +184,7 @@ class Evaluator:
             except Exception as e:
                 worker_logger.error(f"Worker {mp.current_process().name} error getting from queue: {e}")
                 break
-            
+
             try:
                 worker_logger.debug(
                     f"Worker {mp.current_process().name} evaluating id={ind.id}, seed_tag={ind.seed_tag}"
@@ -203,12 +240,12 @@ class Evaluator:
                 items_to_evaluate += 1
 
         results_queue: mp.Queue = mp.Queue()
-        
+
         # If backend is None, evaluate in main process (multiprocessing doesn't work well without backend)
         if self.quant_backend is None:
             logger.info(f"Backend is None, evaluating {items_to_evaluate} individuals in main process (no multiprocessing)")
-            device = get_devices()[0] if get_devices() else torch.device("cpu")
-            
+            device = None
+
             # Process all items from queue - use the counter we tracked
             processed = 0
             while processed < items_to_evaluate:
@@ -222,7 +259,7 @@ class Evaluator:
                 except Exception as e:
                     logger.error(f"Error getting from queue: {e}")
                     break
-                
+
                 try:
                     logger.debug(f"Evaluating individual {ind.id} (index {idx})")
                     memory = self._bytes_total(ind.bits)
@@ -245,16 +282,18 @@ class Evaluator:
                     fit = combine_into_fitness(fallback_loss, memory, latency)
                     res = EvaluatedIndividual(ind, fit, aux={"cached": False, "error": str(e)})
                     results_queue.put((idx, res))
-            
+
             logger.info(f"Processed {processed}/{items_to_evaluate} individuals in main process")
         else:
             # Get devices in the main process (workers will get their own devices)
             available_devices = get_devices()
             if len(available_devices) == 0:
+                import torch
+
                 available_devices = [torch.device("cpu")]
-            
+
             logger.info(f"Creating {len(available_devices)} worker processes for {population_queue.qsize()} individuals")
-            
+
             # If no workers needed (all cached), skip worker creation
             if population_queue.empty():
                 logger.info("All individuals are cached, skipping worker processes")
@@ -278,13 +317,13 @@ class Evaluator:
                     logger.debug(f"Worker {w.name} finished with exit code {w.exitcode}")
 
         logger.info("Finished evaluating population.")
-        
+
         # Collect all results from the queue
         # Note: qsize() may not be reliable, so we use a timeout-based approach
         results_collected = 0
         max_attempts = len(population) * 2  # Safety limit
         attempts = 0
-        
+
         while attempts < max_attempts:
             try:
                 idx, res = results_queue.get(timeout=0.1)
@@ -299,7 +338,7 @@ class Evaluator:
                 logger.error(f"Error getting result from queue: {e}")
                 break
             attempts += 1
-        
+
         logger.info(f"Collected {results_collected} results from queue")
 
         # Check for any missing results and create fallback evaluations
@@ -327,6 +366,8 @@ class Evaluator:
         """
         for building the lut table in real time
         """
+        import torch
+
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         a = torch.randn(m, k, device=device, dtype=torch.float16)

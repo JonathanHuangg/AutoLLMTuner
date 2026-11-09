@@ -14,6 +14,10 @@ def ensure_dir(path) -> Path:
 def _normalize_record(rec):
     """
     Take a single result record dict and add derived metrics.
+
+    Normalizes the two storage formats: frontier JSON rows (bits as a list,
+    latency as `latency_ms`) and SQLite rows (bits as a JSON string, latency
+    as `latency`).
     """
     rec = rec.copy()  # don't mutate original
     val_loss = float(rec["val_loss"])
@@ -23,22 +27,40 @@ def _normalize_record(rec):
     rec["val_loss"] = val_loss  # Cross Entropy Loss (lower is better)
     rec["memory_gb"] = mem_bytes / 1e9
 
+    bits = rec.get("bits")
+    if isinstance(bits, str):
+        try:
+            rec["bits"] = json.loads(bits)
+        except json.JSONDecodeError:
+            pass
+
+    if "latency_ms" not in rec and "latency" in rec:
+        rec["latency_ms"] = float(rec["latency"])
+
     return rec
 
+
 def load_results(results_dir: str) -> pd.DataFrame:
-    """Load all SQLITE result files and compute derived metrics."""
+    """
+    Load all result records for a run directory and compute derived metrics.
+
+    The same individual appears in both the per-epoch frontier JSONs and
+    the SQLite cache, so records are deduplicated by id (the SQLite row
+    wins: it is the canonical stored evaluation).
+    """
     records = []
+    seen_ids = set()
 
-    # frontier json
-    for file in glob.glob(f"{results_dir}/*.json"):
-        with open(file, "r") as f:
-            content = json.load(f)
+    def _add(rec):
+        rec = _normalize_record(rec)
+        rid = rec.get("id")
+        if rid is not None:
+            if rid in seen_ids:
+                return
+            seen_ids.add(rid)
+        records.append(rec)
 
-        if isinstance(content, list):
-            for rec in content:
-                records.append(_normalize_record(rec))
-
-    # sqlite
+    # sqlite first: it is the canonical store of every evaluation
     sqlite_path = os.path.join(results_dir, "metrics.sqlite")
     if os.path.exists(sqlite_path):
         print(f"[INFO] Loading SQLite metrics from {sqlite_path}")
@@ -57,17 +79,35 @@ def load_results(results_dir: str) -> pd.DataFrame:
 
             for row in rows:
                 row_dict = dict(zip(col_names, row))
-                records.append(_normalize_record(row_dict))
+                _add(row_dict)
 
         conn.close()
     else:
         print("[WARN] No metrics.sqlite found.")
 
+    # frontier json: per-epoch Pareto archive snapshots
+    for file in glob.glob(f"{results_dir}/*.json"):
+        with open(file, "r") as f:
+            content = json.load(f)
+
+        if isinstance(content, list):
+            for rec in content:
+                _add(rec)
 
     if not records:
         raise FileNotFoundError(f"No usable JSON results found in {results_dir}")
-    print(f"[INFO] Loaded {len(records)} result records.")
-    return pd.DataFrame(records)
+
+    df = pd.DataFrame(records)
+
+    # The evaluator records a sentinel loss of 10.0 when an evaluation
+    # fails (see evolutionary.evaluator); those rows are not measurements.
+    n_failed = int((df["val_loss"] >= 10.0).sum())
+    if n_failed:
+        print(f"[INFO] Dropping {n_failed} failed evaluation(s) (val_loss = 10.0).")
+        df = df[df["val_loss"] < 10.0]
+
+    print(f"[INFO] Loaded {len(df)} result records.")
+    return df
 
 def dominates(a, b, objectives):
     better_or_equal = True

@@ -1,5 +1,5 @@
 import argparse
-from utils import load_results, slice_pareto
+from .utils import load_results, slice_pareto
 
 def main():
     parser = argparse.ArgumentParser()

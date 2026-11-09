@@ -1,0 +1,43 @@
+# CPU smoke-test run: exercises the full search loop (config loading,
+# population, NSGA-II selection, SQLite cache, frontier saving) without a
+# GPU or a model download. The loss is a deterministic synthetic surrogate
+# (see evolutionary.evaluator.surrogate_mock_loss), NOT a model result.
+# Latency is disabled: the committed hardware LUT has no entries for the
+# Qwen2.5 op shapes, so LOOKUP would raise and REAL needs a GPU.
+run_id: smoke-cpu-mock
+
+io:
+  out_dir: ../runs
+
+model:
+  name: Qwen/Qwen2.5-7B-Instruct
+
+  param_counts_file: ../configs/qwen2.5_param_counts.json
+
+  default_fp_bits: 16
+
+units:
+  spec_file: ../configs/quant_units.yaml
+
+  layer_spec_file: ../configs/qwen2.5_layer_spec.yaml
+
+hardware:
+  lut_file: ../configs/hardware.yaml
+
+run:
+  seed: 67
+  population_size: 8
+  generations: 3
+  mutation_rate: 0.03
+  crossover_probability: 0.8
+  elitism_frac: 0.25
+
+evaluation:
+
+  val_tokens_schedule: [512, 2048]
+
+  measure_latency: none
+
+  save_checkpoints: all
+
+  mock_backend: true

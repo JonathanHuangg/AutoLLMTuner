@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autollmtuner"
+version = "0.1.0"
+description = "Evolutionary mixed-precision bit allocation for LLM quantization"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "PyYAML>=6.0.1",
+  "numpy>=1.26,<2",  # 1.x line: the scipy floor (>=1.11) is not numpy-2 compatible
+  "pandas>=2.2",
+  "matplotlib>=3.8",
+  "tqdm>=4.66",
+  "seaborn>=0.13",
+]
+
+# Heavy GPU-only dependencies: the search loop, the tests, and the
+# visualization tools run without them (see evaluation.mock_backend).
+# Install with `pip install -e .[gpu]` on a CUDA machine to run real
+# model evaluations.
+[project.optional-dependencies]
+gpu = [
+  "torch>=2.9",
+  "transformers>=4.43.3",
+  "bitsandbytes",
+  "datasets",
+  "polars",
+  "accelerate",
+]
+dev = [
+  "pytest>=8",
+]
+
+[project.scripts]
+autollmtuner-search = "evolutionary.main_search:main"
+autollmtuner-plots = "visualize.all_plots:main"
+autollmtuner-slice = "visualize.call_pareto_slicing:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

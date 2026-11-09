@@ -12,7 +12,7 @@ def plot_pareto(df, x_col="memory_gb", y_col="val_loss",
     sns.set(style="whitegrid", context="talk")
     plt.figure(figsize=(8, 6))
 
-    pareto = compute_pareto_frontier(df, x_col, y_col, objective_y="min")
+    pareto = compute_pareto_frontier(df, x_col, y_col, objective_x="min", objective_y="min")
     print(f"[DEBUG] Plotting 2D Pareto: total points={len(df)}, pareto points={len(pareto)}")
 
 
@@ -75,7 +75,7 @@ def plot_all_non_frontier(df, x_col="latency_ms", y_col="val_loss",
     plt.figure(figsize=(8, 6))
 
     # Compute frontier to know what to exclude
-    pareto = compute_pareto_frontier(df, x_col, y_col, objective_y="min")
+    pareto = compute_pareto_frontier(df, x_col, y_col, objective_x="min", objective_y="min")
     mask_frontier = df.index.isin(pareto.index)
 
     n_total = len(df)

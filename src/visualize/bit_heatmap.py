@@ -3,14 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 from .utils import ensure_dir
-from sklearn.cluster import KMeans
 
-
-import seaborn as sns
-import matplotlib.pyplot as plt
-import numpy as np
-from pathlib import Path
-from .utils import ensure_dir
 
 def plot_bit_allocation_heatmap(
     df,

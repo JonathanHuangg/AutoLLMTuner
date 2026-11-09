@@ -11,9 +11,17 @@ if no other individual dominates it, it is dominant
 this is for global use acrossed epochs
 """
 def pareto_archive(evals: List[EvaluatedIndividual]) -> List[EvaluatedIndividual]:
-    out: List[EvaluatedIndividual] = []
+    # Elites are re-evaluated in later generations, so the same individual
+    # can appear more than once; the archive is a set of configurations.
+    seen: set = set()
+    unique: List[EvaluatedIndividual] = []
     for e in evals:
-        if not any(dominates(other.fit, e.fit) for other in evals if other is not e):
+        if e.ind.id not in seen:
+            seen.add(e.ind.id)
+            unique.append(e)
+    out: List[EvaluatedIndividual] = []
+    for e in unique:
+        if not any(dominates(other.fit, e.fit) for other in unique if other is not e):
             out.append(e)
     return out
 

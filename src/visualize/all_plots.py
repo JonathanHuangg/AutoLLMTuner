@@ -14,7 +14,6 @@ from .bit_heatmap import plot_bit_allocation_heatmap
 def generate_all_plots(results_dir: str, save_dir: str):
     """Run all visualization routines sequentially."""
     df = load_results(results_dir)
-    df = df[df["val_loss"] < 2.6]
 
     plot_pareto(df, save_dir=save_dir)
     plot_pareto_loss_vs_latency(df, save_dir=save_dir)

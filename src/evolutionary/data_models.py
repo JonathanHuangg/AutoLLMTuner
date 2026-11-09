@@ -1,24 +1,17 @@
 from dataclasses import dataclass
 from typing import List, Dict, Any, Tuple, Optional
-from enum import Enum
 import json
 
 # just type aliases
-Bit = int # bit width value
-Gene = Bit # genes are basically bits
+Bit = int  # bit width value
+Gene = Bit  # genes are basically bits
 
-class SeedTag(str, Enum):
-    UNIFORM8 = "uniform8"
-    MUTATION = "mut"
-    CROSSOVER = "xover"
-    ELITE = "elite"
-    RANDOM = "rand"
 
 @dataclass(frozen=True)
 class Individual:
-    bits: Tuple[Gene, ...] # a genome - like [2, 4, 2, 8] where each layer has a bit width
-    seed_tag: SeedTag # what generated this individual - e.g. "random", "mutated", "crossover"
-    id: str 
+    bits: Tuple[Gene, ...]  # a genome - like [2, 4, 2, 8] where each layer has a bit width
+    seed_tag: str  # what generated this individual - e.g. "randmix", "uniform8", "xover_mut"
+    id: str
 
 @dataclass
 class Fitness:
